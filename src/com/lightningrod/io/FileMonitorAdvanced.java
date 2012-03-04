@@ -97,7 +97,9 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
             
             File[] files = root.listFiles();
             for (File f : files) {
-                newFiles.add(f);
+                if (!f.isHidden()) {
+                    newFiles.add(f);
+                }
                 if (!f.isFile()) {
                     Set<File> subFiles = getAllFiles(f);
                     newFiles.addAll(subFiles);
