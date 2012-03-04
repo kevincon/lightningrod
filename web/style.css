@@ -1,3 +1,16 @@
+#logo {
+	background-color:666666;
+	padding-top: 30px;
+}
+
+#logo h1 {
+	color: white;
+        padding-bottom: 5px;
+	font-family: 'Electrolize', sans-serif;
+	font-size:5em;       
+	text-align:center;
+}
+
 #navigation{
         background-color:666666;
 }
@@ -14,8 +27,7 @@
         background-color:666666;
         padding-left: 5px;
         padding-right: 5px;
-        
-        
+	margin-top: 30px;
 }
 
 #navigation a{
@@ -26,11 +38,6 @@
 #navigation a:hover{
         color:yellow;
         text-decoration: none;
-}
-
-#navigation h1{
-        color: white;
-        padding-bottom: 5px;
 }
 
 h3{
