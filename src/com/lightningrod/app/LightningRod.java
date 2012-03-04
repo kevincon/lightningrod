@@ -61,11 +61,11 @@ public class LightningRod {
                     com.lightningrod.gui.LRgui.setupGUI(db);
 
                     //start file monitoring timer
-                    //monitor.addListener(monitor);
-                    //monitor.startTimer();
+                    monitor.addListener(monitor);
+                    monitor.startTimer();
                     
                     //start Dropbox sync timer
-                    //sync.startTimer();
+                    sync.startTimer();
                     while(true);
                 }
 

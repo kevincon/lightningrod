@@ -31,17 +31,18 @@ import javax.swing.tree.*;
  */
 public class LRgui extends javax.swing.JFrame {
     // Old Set
-    static HashSet <DropboxAPI.Entry>oldset = new HashSet <DropboxAPI.Entry>();
+    static HashSet <String>oldset = new HashSet <String>();
     // New Set
-    static HashSet <DropboxAPI.Entry>newset = new HashSet <DropboxAPI.Entry>();
+    static HashSet <String>newset = new HashSet <String>();
     
     // Selection Set
-    static HashSet <DropboxAPI.Entry>sel = new HashSet <DropboxAPI.Entry>();
+    static HashSet <String>sel = new HashSet <String>();
     // Deletion Set
-    static HashSet <DropboxAPI.Entry>del = new HashSet <DropboxAPI.Entry>();
+    static HashSet <String>del = new HashSet <String>();
     
     // String HashSet
     static HashSet <String>paths = new HashSet <String>();
+    static HashSet <String>oldpaths = new HashSet <String>();
     
     static DBApi dbapiobject;
     
@@ -320,7 +321,7 @@ public class LRgui extends javax.swing.JFrame {
                 int size = nodes.length;
                 for(int i = 0;i<size;i++){
                     if(((DBNode)nodes[i]).isSelected()){
-                        added = newset.add((DropboxAPI.Entry)(((DBNode)nodes[i]).getUserObject()));
+                        added = newset.add(((DropboxAPI.Entry)(((DBNode)nodes[i]).getUserObject())).path);
                     }
                 }
             }
@@ -338,9 +339,9 @@ public class LRgui extends javax.swing.JFrame {
         newset.clear();
         
         // Update Previous Selection Paths Hashset
-        Iterator<DropboxAPI.Entry> iter = oldset.iterator();
+        Iterator<String> iter = oldset.iterator();
         while(iter.hasNext()){
-            paths.add(iter.next().path);
+            paths.add(iter.next());
         }
         
         // Update DBApi Hashset
@@ -358,13 +359,36 @@ public class LRgui extends javax.swing.JFrame {
             TreeNode[] nodes = node.getPath();
             int size = nodes.length;
             for(int i = 0;i<size;i++){
+                String pathval = ((((DropboxAPI.Entry)(((DBNode)nodes[i])).getUserObject())).path);
                 // Check pathname
-                if(paths.contains((((DropboxAPI.Entry)(((DBNode)nodes[i])).getUserObject())).path)){
+                if((paths.contains(pathval) && (!sel.contains(pathval)))){
+                    // Only set node as selected
+                    ((DBNode)nodes[i]).setSelected(true);
+                }else if(sel.contains(pathval)){
+                    // 
+                    dbapiobject.downloadFile((DropboxAPI.Entry)(((DBNode)nodes[i]).getUserObject()));
+                    ((DBNode)nodes[i]).setSelected(true);
+                }else{
                     // Set node as selected
                     ((DBNode)nodes[i]).setSelected(true);
                 }
             }   
         }
+        
+        Iterator<DropboxAPI.Entry> it = sel.iterator();
+        while(it.hasNext()) {
+            dbapiobject.downloadFile(it.next());
+        }
+        
+        it = del.iterator();
+        while(it.hasNext()) {
+            dbapiobject.deleteLocalFile(it.next());
+        }
+        
+        // Update CheckBoxes
+        ((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
+        filetreedisplay.revalidate();
+        filetreedisplay.repaint();
     }//GEN-LAST:event_updateFilesActionPerformed
 
     private void selectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllActionPerformed
@@ -407,6 +431,31 @@ public class LRgui extends javax.swing.JFrame {
         
         //download entire Dropbox folder, add file monitors
         rootnode = db.treeDir(db.getRoot());
+        
+        oldset.clear();
+        newset.clear();
+        paths.clear();
+        sel.clear();
+        del.clear();
+        
+        /*
+        // Initialize oldset Hashtable
+        Enumeration e = rootnode.breadthFirstEnumeration();
+        boolean added;
+        while (e.hasMoreElements()) {
+            DBNode node = (DBNode) e.nextElement();
+            if (node.isSelected()) {
+                TreeNode[] nodes = node.getPath();
+                // Add to new set
+                int size = nodes.length;
+                for(int i = 0;i<size;i++){
+                    if(((DBNode)nodes[i]).isSelected()){
+                        added = newset.add((DropboxAPI.Entry)(((DBNode)nodes[i]).getUserObject()));
+                    }
+                }
+            }
+        }
+        */
         
         dbapiobject = db;
         

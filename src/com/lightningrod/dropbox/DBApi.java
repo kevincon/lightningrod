@@ -48,7 +48,7 @@ public class DBApi {
 		this.appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
 		this.session = new WebAuthSession(appKeys, ACCESS_TYPE);
 		this.mDBApi = new DropboxAPI<WebAuthSession>(session);
-                
+                this.pathnames = new HashSet<String>();
                 this.root_drive = rd;
                 this.monitor = monitor;
 	}
@@ -269,6 +269,18 @@ public class DBApi {
                 return false;
             }
         }
+        
+        /**
+         * Delete file from local file system.
+         * @param node The Dropbox Entry node to delete from file system.
+         * @return True if successful, false otherwise.
+         */
+        public boolean deleteLocalFile(Entry node) {
+            File f = new File(getLocalPath(node.path));
+            boolean ret = f.delete();
+            this.monitor.removeFile(f);
+            return ret;
+        }
 
         /**
          * Download file from Dropbox to local file system.
@@ -291,6 +303,7 @@ public class DBApi {
 
                     mDBApi.getFile(node.path, null, out, null);
                 }
+                this.monitor.addFile(f, node);
                 return f;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
