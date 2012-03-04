@@ -22,6 +22,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import com.lightningrod.dropbox.DBApi;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.tree.*;
 //import javax.swing.tree.TreeSelectionModel;
@@ -49,6 +51,9 @@ public class LRgui extends javax.swing.JFrame {
     
     //static JTree filetree = new JTree((TreeNode)null);
     static DBNode rootnode;// = com.lightningrod.dropbox.DBApi.treeDir(null);
+    
+    static private int counter = 0;
+    static private int hashsize = 0;
     
     /*
      * Class that carries out mouse actions
@@ -344,8 +349,7 @@ public class LRgui extends javax.swing.JFrame {
     }//GEN-LAST:event_menuExitActionPerformed
 
     private void updateFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateFilesActionPerformed
-        int counter = 0;
-        int hashsize = 0;
+
         Enumeration e = rootnode.breadthFirstEnumeration();
         boolean added;
         while (e.hasMoreElements()) {
@@ -395,11 +399,40 @@ public class LRgui extends javax.swing.JFrame {
         rootnode.setRootSelected();
         
         // Size of Hashset for adding
-        hashsize = sel.size();
+        hashsize = sel.size() + del.size();
+        
+        new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    // Pause 1000 ms
+                    int val = 0;
+                    if(hashsize > 0)
+                        val = (int)((100*((double)counter/(double)hashsize)));
+                    System.out.println(val);
+                    syncstatusBar.setValue(val);
+                    syncstatusBar.revalidate();
+                    syncstatusBar.repaint();
+                    usbspaceBar.setValue(dbapiobject.getRootFreeSpace());
+                    dbspaceBar.setValue(dbapiobject.getDropboxFreeSpace());
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(LRgui.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    if (val == 100) {
+                        return;
+                    }
+                }
+            }
+        }).start();
         
         // Iterate through tree and check if pathname is in Hashset
         e = rootnode.breadthFirstEnumeration();
+        counter = 0;
         while (e.hasMoreElements()) {
+            this.validate();
+            this.repaint();
             DBNode node = (DBNode) e.nextElement();
             DropboxAPI.Entry entry = (DropboxAPI.Entry)(node.getUserObject());
             String pathval = entry.path;
@@ -409,6 +442,7 @@ public class LRgui extends javax.swing.JFrame {
                 System.out.println("GOT THERE WITH "+node.toString());
                 node.setSelected(false);
                 dbapiobject.deleteLocalFile(entry);
+                counter++;
             }
             else if((paths.contains(pathval) && (!sel.contains(pathval)))){
                 // Only set node as selected
@@ -418,11 +452,6 @@ public class LRgui extends javax.swing.JFrame {
                 dbapiobject.downloadFile(entry);
                 node.setSelectedStupid();
                 counter++;
-                int val = (int)((100*((double)counter/(double)hashsize)));
-                System.out.println(val);
-                syncstatusBar.setValue(val);
-                syncstatusBar.revalidate();
-                syncstatusBar.repaint();
             }
         }
         
@@ -432,16 +461,14 @@ public class LRgui extends javax.swing.JFrame {
         filetreedisplay.repaint();
         
         // Update Status Bars
-        syncstatusBar.setValue(0);
-        usbspaceBar.setValue(dbapiobject.getRootFreeSpace());
-        dbspaceBar.setValue(dbapiobject.getDropboxFreeSpace());
+        /*
         syncstatusBar.revalidate();
         usbspaceBar.revalidate();
         dbspaceBar.revalidate();
         syncstatusBar.repaint();
         usbspaceBar.repaint();
         dbspaceBar.repaint();
-        
+        */
     }//GEN-LAST:event_updateFilesActionPerformed
 
     private void selectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllActionPerformed
