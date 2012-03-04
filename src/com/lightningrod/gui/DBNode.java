@@ -37,14 +37,6 @@ public class DBNode extends DefaultMutableTreeNode {
     }
     
     /*
-     * ONLY USED FOR TESTING
-     */
-    public DBNode(Object dbEntry, boolean direct) {
-        super(dbEntry,direct);
-        DropboxAPI.Entry entry = (DropboxAPI.Entry)dbEntry;
-    }
-    
-    /*
      * Override add method to allow for sorting of files/folders
      */
     @Override

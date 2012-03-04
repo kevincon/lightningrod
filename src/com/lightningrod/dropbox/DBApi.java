@@ -26,7 +26,7 @@ public class DBApi {
 	
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
-        final static public String ROOT_FOLDER = "home/kevin/testdb";
+        final static public String ROOT_FOLDER = "Users/bill/Downloads/testdb";
         
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
@@ -118,7 +118,7 @@ public class DBApi {
 		for (Entry e : node.contents) {
 			//TODO construct tree for Bill
 			//System.out.print("\t");
-			treeDir(e);
+			n.add(treeDir(e));
 		}
                 return n;
 	}
@@ -150,8 +150,36 @@ public class DBApi {
          * @return The updated root Entry node.
          */
         public Entry getRoot() {
-		return (this.root = updateTree(root));
+            return (this.root = updateTree(root));
 	}
+        
+        // Returns the Dropbox free space in Megabytes, or -1 if it was not
+        // retrievable.
+        public long getDropboxFreeSpace() {
+            long freeSpace = -1L;
+            try {
+                freeSpace = mDBApi.accountInfo().quota -
+                                (mDBApi.accountInfo().quotaNormal +
+                                 mDBApi.accountInfo().quotaShared);
+            } catch (DropboxException e) {
+                System.out.println("Unable to retrieve Dropbox free space. "
+                        + "Error: " + e.toString());
+            }
+            return freeSpace;
+        }
+        
+        // Returns the root drive free space in Megabytes, or -1 if it was not
+        // retrievable.
+        public long getRootFreeSpace() {
+            long freeSpace = -1L;
+            try {
+                freeSpace = (new File(root_drive)).getFreeSpace();
+            } catch (SecurityException e) {
+                System.out.println("Unable to retrieve root drive free space. "
+                        + "Error: " + e.toString());
+            }
+            return freeSpace;
+        }
 
         //
         //creates parent directories if necessary

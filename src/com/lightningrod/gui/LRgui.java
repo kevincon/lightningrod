@@ -34,7 +34,7 @@ public class LRgui extends javax.swing.JFrame {
     static HashSet <DropboxAPI.Entry>s2 = new HashSet <DropboxAPI.Entry>();
     
     //static JTree filetree = new JTree((TreeNode)null);
-    //static DBNode rootnode = com.lightningrod.dropbox.DBApi.treeDir(null);
+    static DBNode rootnode;// = com.lightningrod.dropbox.DBApi.treeDir(null);
     
     /*
      * Class that carries out mouse actions
@@ -118,13 +118,12 @@ public class LRgui extends javax.swing.JFrame {
     
 
     /**
-     * Creates new form gui
+     * Creates new gui
      */
     public LRgui() {
         initComponents();
         
         /******* NEW CODE ********/
-        
         // Set Root Node as invisible
         filetreedisplay.setRootVisible(false);
         filetreedisplay.setCellRenderer(new RenderChecks());
@@ -348,10 +347,13 @@ public class LRgui extends javax.swing.JFrame {
         filetreedisplay.repaint();
     }//GEN-LAST:event_deselectAllActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+    
+    public static void setupGUI(DBApi db){
+        // <editor-fold>
+        
+        //download entire Dropbox folder, add file monitors
+        rootnode = db.treeDir(db.getRoot());
+        
         /*
          * Set the Nimbus look and feel
          */
@@ -378,85 +380,21 @@ public class LRgui extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(LRgui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        // Set Variables
         
         // Set Root Node as Selected
         rootnode.setRootSelected();
         
-        
-        // TEST TEST TEST
-        
-        
-        DropboxAPI.Entry entry1 = new DropboxAPI.Entry();
-        entry1.path = "test1";
-        com.lightningrod.gui.DBNode e1 = new com.lightningrod.gui.DBNode(entry1,true);
-        
-        DropboxAPI.Entry entry2 = new DropboxAPI.Entry();
-        entry2.path = "ab";
-        com.lightningrod.gui.DBNode e2 = new com.lightningrod.gui.DBNode(entry2);
-        
-        DropboxAPI.Entry entry3 = new DropboxAPI.Entry();
-        entry3.path = "test3";
-        com.lightningrod.gui.DBNode e3 = new com.lightningrod.gui.DBNode(entry3);
-        
-        DropboxAPI.Entry entry4 = new DropboxAPI.Entry();
-        entry4.path = "a";
-        com.lightningrod.gui.DBNode e4 = new com.lightningrod.gui.DBNode(entry4,true);
-        
-        DropboxAPI.Entry entry5 = new DropboxAPI.Entry();
-        entry5.path = "a";
-        com.lightningrod.gui.DBNode e5 = new com.lightningrod.gui.DBNode(entry5);
-        
-        DropboxAPI.Entry entry6 = new DropboxAPI.Entry();
-        entry6.path = "best6";
-        com.lightningrod.gui.DBNode e6 = new com.lightningrod.gui.DBNode(entry6,true);
-        
-        DropboxAPI.Entry entry7 = new DropboxAPI.Entry();
-        entry7.path = "best7";
-        com.lightningrod.gui.DBNode e7 = new com.lightningrod.gui.DBNode(entry7,true);
-        
-        DropboxAPI.Entry entry8 = new DropboxAPI.Entry();
-        entry8.path = "best8";
-        com.lightningrod.gui.DBNode e8 = new com.lightningrod.gui.DBNode(entry8);
-        
-        DropboxAPI.Entry root = new DropboxAPI.Entry();
-        root.path = "testr";
-        rootnode.setUserObject(root);
-        //com.lightningrod.gui.DBNode r = new com.lightningrod.gui.DBNode(root);
-        
-        rootnode.add(e6);
-        
-        e1.add(e3);
-        rootnode.add(e2);
-        rootnode.add(e1);
-        rootnode.add(e4);
-        e4.add(e5);
-        e6.add(e7);
-        e7.add(e8);
-        
-        // TEST TEST TEST END
-        
-        
-        
-
-        
-        
-        
-        
-       
         /*
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            // <editor-fold>
             @Override
             public void run() {
                 new LRgui().setVisible(true);
             }
         });
-        // </editor-fold>
-    }
+    }// </editor-fold>
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel dbStatus;
     private javax.swing.JProgressBar dbspaceBar;
@@ -508,8 +446,4 @@ public class LRgui extends javax.swing.JFrame {
   }
 
   
-}
-
-
-
  */
