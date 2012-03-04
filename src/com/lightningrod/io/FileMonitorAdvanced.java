@@ -10,8 +10,6 @@ import com.google.common.collect.HashBiMap;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.*;
-import no.geosoft.cc.io.FileListener;
-import no.geosoft.cc.io.FileMonitor;
 
 // http://geosoft.no/software/filemonitor/FileMonitor.java.html
 
