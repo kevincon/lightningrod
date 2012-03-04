@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 //import javax.swing.tree.TreeSelectionModel;
@@ -60,62 +61,37 @@ public class LRgui extends javax.swing.JFrame {
                     // If selected expand, otherwise contract
                     if(isSelected){
                         //mousetree.expandPath(path);
-                        expandChildren(node,path);
+                        //expandChildren(node,path);
+                        int z = expandNode(mousetree,node,treerow);
                     }else{
                         mousetree.collapsePath(path);
                     }
                 }
                                     
                 ((DefaultTreeModel) mousetree.getModel()).nodeChanged(node);
-                //if (treerow == 0) {
-                    mousetree.revalidate();
-                    mousetree.repaint();
-                //} 
+                mousetree.revalidate();
+                mousetree.repaint();
             }
         }
         
-        public void expandChildren(DBNode n, TreePath orig){
-            TreePath expandpath;
-            // Check if Directory
-            if (n.children() != null) {
-                Enumeration e = n.children();
-                while (e.hasMoreElements()) {
-                    DBNode node = (DBNode) e.nextElement();
-                    expandpath = orig.pathByAddingChild((Object)node);
-                    if(node.childrenAllowed()){
-                        expandChildren(node,expandpath);
-                    }else{
-                        mousetree.expandPath(expandpath);
-                    }
-                    mousetree.expandPath(expandpath);
+        public int expandNode (JTree tree,DBNode node, int row){
+            if (node != null  &&  !node.isLeaf()) {
+                tree.expandRow(row);
+                for (int index = 0; row + 1 < tree.getRowCount() && index < node.getChildCount();index++){
+                    row++;
+                    DBNode child = (DBNode)node.getChildAt(index);
+                    if (child == null)
+                        break;
+                    TreePath path;
+                    while ((path = tree.getPathForRow(row)) != null  &&
+                            path.getLastPathComponent() != child)
+                        row++;
+                    if (path == null)
+                        break;
+                    row = expandNode(tree, child, row);
                 }
-            }
-                
-            /*
-             * for (int i = 0; i < jTree.getRowCount(); i++) {
-            jTree.expandRow(i);
-}
-             */
-            
-            
-            
-            /*
-            TreePath expandpath;
-            if (n.children() != null) {
-                Enumeration e = n.children();
-                while (e.hasMoreElements()) {
-                    DBNode node = (DBNode) e.nextElement();
-                    if(node.childrenAllowed()){
-                        expandChildren(node,orig);
-                    }else{
-                        expandpath = orig.pathByAddingChild((Object)node);
-                        mousetree.expandPath(expandpath);
-                    }
-                }
-            }
-            *
-            */
-            //mousetree.expandPath(orig);
+            }   
+            return row;
         }
     }
 
@@ -125,7 +101,13 @@ public class LRgui extends javax.swing.JFrame {
     public LRgui() {
         initComponents();
         
-        // * NEW CODE */
+        /******* NEW CODE ********/
+        
+        // Set Root Node as invisible
+        filetreedisplay.setRootVisible(false);
+        // Set Root Node as Selected
+        rootnode.setSelected(true);
+        
         filetreedisplay.setCellRenderer(new RenderChecks());
         
         filetreedisplay.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -306,10 +288,8 @@ public class LRgui extends javax.swing.JFrame {
         
         e1.add(e3);
         rootnode.add(e2);
-        //e1.add(e3);
         rootnode.add(e1);
         rootnode.add(e4);
-        //rootnode.add(e1);
         e4.add(e5);
         e6.add(e7);
         e7.add(e8);

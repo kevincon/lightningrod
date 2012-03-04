@@ -37,15 +37,18 @@ public class LightningRod {
                     //TODO Warn user that Dropbox folder was backed up.
                 }
                 
+                //create Dropbox folder
+                new File(root_path).mkdir();
+                
                 //create file monitoring object
                 FileMonitorAdvanced monitor = new FileMonitorAdvanced (3000L, 5000L,
                 new File(root_path));
                 
-                //create Dropbox sync monitoring object
-                DBSync sync = new DBSync(monitor, 3000L);
-                
                 //create db api object
 		DBApi db = new DBApi(root_drive, monitor);
+                
+                //create Dropbox sync monitoring object
+                DBSync sync = new DBSync(monitor, 3000L, db);
                 
 		//login
 		if (!db.login()) {

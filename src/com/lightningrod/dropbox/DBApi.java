@@ -25,7 +25,7 @@ public class DBApi {
 	
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
-        final static public String ROOT_FOLDER = "lightning_rod";
+        final static public String ROOT_FOLDER = "home/kevin/testdb";
         
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
@@ -160,21 +160,33 @@ public class DBApi {
             if (f == null) 
                 return null;
             String strip = root_drive + ROOT_FOLDER;
-            System.out.println(strip);
-            System.out.println(f.getAbsolutePath());
+            //System.out.println(strip);
+            //System.out.println(f.getAbsolutePath());
             String path = f.getAbsolutePath().replaceFirst(strip, "");
-            System.out.println(path);
-            try {
-                InputStream in = new FileInputStream(f);
-                return mDBApi.putFile(path, in, f.length(), null, null);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            } catch (DropboxException ex) {
-                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+            //System.out.println(path);
+            if (f.isDirectory()) {
+                try {
+                    Entry ret = mDBApi.createFolder(path);
+                    this.monitor.addFile(f, ret);
+                    return ret;
+                } catch (DropboxException ex) {
+                    Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+            } else {
+                try {
+                    InputStream in = new FileInputStream(f);
+                    Entry ret = mDBApi.putFile(path, in, f.length(), null, null);
+                    this.monitor.addFile(f, ret);
+                    return ret;
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                } catch (DropboxException ex) {
+                    Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
             }
-            
         }
     
         /**
@@ -187,6 +199,9 @@ public class DBApi {
             File f = se.getValue();
             
             if (e == null || f == null)
+                return false;
+            
+            if (f.isDirectory())
                 return false;
             
             try {

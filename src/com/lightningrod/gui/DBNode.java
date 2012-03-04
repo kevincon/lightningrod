@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 /**
  * A class that defines a Node in the DropBox File Structure
@@ -70,6 +71,14 @@ class DBNode extends DefaultMutableTreeNode {
                 DBNode node = (DBNode) e.nextElement();
                 node.setSelected(isSelected);
             }
+        }else if(children == null && isSelected){
+            // Node is a file and want to select it
+            // Select all parent nodes
+            DBNode x = this;
+            while(x.getParent() != null && x.getParent() != x.getRoot() && !((DBNode)x.getParent()).isSelected()){
+                ((DBNode)x.getParent()).setSelected(true);
+                x = (DBNode)(x.getParent());
+            }
         }
     }
     
@@ -119,7 +128,6 @@ class DBNode extends DefaultMutableTreeNode {
                 }
             }else{
                 if(((DBNode)o2).childrenAllowed()){
-                //if(((DBNode)o2).childrenAllowed()){
                 //if(((DropboxAPI.Entry)(((DBNode)o2).getUserObject())).isDir){ - PUT BACK IN AFTER TESTING
                     // o1 file and o2 directory -> file first
                     return 1;
