@@ -44,23 +44,16 @@ public class LRgui extends javax.swing.JFrame {
                 boolean isSelected = ! (node.isSelected());
                 node.setSelected(isSelected);
                 
-                // If node is directory and selected, expand
-                if(isSelected && node.childrenAllowed()){
-                    mousetree.expandPath(path);
-                }
-                        
-                        
-                // CHECK THIS     
-                /*
-                if (node.getSelectionMode() == DBNode.DIG_IN_SELECTION) {
-                    if ( isSelected) {
-                        tree.expandPath(path);
-                    } else {
-                        tree.collapsePath(path);
+                // Check if node is directory
+                if(node.childrenAllowed()){
+                    // If selected expand, otherwise contract
+                    if(isSelected){
+                        mousetree.expandPath(path);
+                    }else{
+                        mousetree.collapsePath(path);
                     }
                 }
-                 */
-                
+                                    
                 ((DefaultTreeModel) mousetree.getModel()).nodeChanged(node);
                 if (treerow == 0) {
                     mousetree.revalidate();
