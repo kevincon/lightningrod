@@ -11,9 +11,13 @@ import com.dropbox.client2.DropboxAPI;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 //import javax.swing.tree.TreeSelectionModel;
 
 /**
@@ -74,6 +78,28 @@ public class LRgui extends javax.swing.JFrame {
      */
     public LRgui() {
         initComponents();
+        
+        // * NEW CODE */
+        filetreedisplay.setCellRenderer(new RenderChecks());
+        
+        filetreedisplay.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        filetreedisplay.putClientProperty("JTree.lineStyle", "Angled");
+        filetreedisplay.addMouseListener(new DBNodeMouseListener(filetreedisplay));
+        //JScrollPane sp = new JScrollPane(filetreedisplay);
+
+        
+        JTextArea textArea = new JTextArea(3,10);
+        JScrollPane textPanel = new JScrollPane(textArea);
+        JButton button = new JButton("print");
+        //button.addActionListener(
+        //new ButtonActionListener(nodes[0], textArea));
+        //JPanel panel = new JPanel(new BorderLayout());
+        //panel.add(button, BorderLayout.SOUTH);
+
+        //getContentPane().add(sp,    BorderLayout.CENTER);
+        //getContentPane().add(panel, BorderLayout.EAST);
+        //getContentPane().add(textPanel, BorderLayout.SOUTH);
+        /** END NEW CODE **/
     }
 
     /**
@@ -235,6 +261,12 @@ public class LRgui extends javax.swing.JFrame {
         // TEST TEST TEST END
         
         
+        
+
+        
+        
+        
+        
        
         /*
          * Create and display the form
@@ -275,12 +307,8 @@ public class CheckNodeTreeExample extends JFrame {
     for (int i=0;i<strs.length;i++) {
       nodes[i] = new CheckNode(strs[i]); 
     }
-    nodes[0].add(nodes[1]);
-    nodes[1].add(nodes[2]);
-    nodes[1].add(nodes[3]);
-    nodes[0].add(nodes[4]);
-    nodes[3].setSelected(true);
-    JTree tree = new JTree( nodes[0] );
+    
+    
     tree.setCellRenderer(new CheckRenderer());
     tree.getSelectionModel().setSelectionMode(
       TreeSelectionModel.SINGLE_TREE_SELECTION
@@ -304,39 +332,7 @@ public class CheckNodeTreeExample extends JFrame {
     getContentPane().add(textPanel, BorderLayout.SOUTH);
   }
 
-  class NodeSelectionListener extends MouseAdapter {
-    JTree tree;
-    
-    NodeSelectionListener(JTree tree) {
-      this.tree = tree;
-    }
-    
-    public void mouseClicked(MouseEvent e) {
-      int x = e.getX();
-      int y = e.getY();
-      int row = tree.getRowForLocation(x, y);
-      TreePath  path = tree.getPathForRow(row);
-      //TreePath  path = tree.getSelectionPath();
-      if (path != null) {
-        CheckNode node = (CheckNode)path.getLastPathComponent();
-        boolean isSelected = ! (node.isSelected());
-        node.setSelected(isSelected);
-        if (node.getSelectionMode() == CheckNode.DIG_IN_SELECTION) {
-          if ( isSelected) {
-            tree.expandPath(path);
-          } else {
-            tree.collapsePath(path);
-          }
-        }
-        ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
-        // I need revalidate if node is root.  but why?
-        if (row == 0) {
-          tree.revalidate();
-          tree.repaint();
-        }
-      }
-    }
-  }
+  
 
 
   class ButtonActionListener implements ActionListener {
