@@ -22,14 +22,14 @@ public class DBTest {
 			//db.updateTree(null);
 			
 			//print out tree
-			db.treeDir(db.getRoot());
+			//db.treeDir(db.getRoot());
                         //db.getRoot();
                         
-                        //File f = new File(db.getLocalPath("testdir/test.txt"));
-                        //db.addFile(f);
+                        File f = new File(db.getLocalPath("test.txt"));
+                        db.addFile(f);
 		}
 
-		db.disconnect();
+		db.logout();
 	}
 
 }

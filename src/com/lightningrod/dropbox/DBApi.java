@@ -252,15 +252,17 @@ public class DBApi {
         }
         
         //Add on "ROOT_FOLDER/path" to root_drive
-        private String getLocalPath(String path) {
+        public String getLocalPath(String path) {
             return root_drive + ROOT_FOLDER + File.separator + path;
         }
         
         /**
-         * Disconnect API, remove user session.
+         * Logout user from session.
          */
-        public void disconnect() {
+        public void logout() {
 		session.unlink();
 	}
+        
+        //public boolean backupFolder
 	
 }
