@@ -2,6 +2,7 @@ package com.lightningrod.app;
 
 import com.lightningrod.dropbox.DBApi;
 import com.lightningrod.dropbox.DBSync;
+import com.lightningrod.gui.DBNode;
 import com.lightningrod.io.Backup;
 import com.lightningrod.io.FileMonitorAdvanced;
 import java.io.File;
@@ -56,7 +57,7 @@ public class LightningRod {
                     return;
 		} else {
                     //download entire Dropbox folder, add file monitors
-                    db.treeDir(db.getRoot());
+                    DBNode rootnode = db.treeDir(db.getRoot());
 
                     //start file monitoring timer
                     monitor.addListener(monitor);

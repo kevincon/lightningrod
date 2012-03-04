@@ -17,7 +17,7 @@ import javax.swing.tree.TreeNode;
  * The node object is the DropBox Entry Object
  * @author William Etter
  */
-class DBNode extends DefaultMutableTreeNode {
+public class DBNode extends DefaultMutableTreeNode {
     // <editor-fold>
     protected boolean isDirectory;  // Is the node a Directory?
     protected boolean isSelected;   // Is the node selected?    

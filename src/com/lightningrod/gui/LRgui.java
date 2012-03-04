@@ -20,6 +20,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import com.lightningrod.dropbox.DBApi;
 //import javax.swing.tree.TreeSelectionModel;
 
 /**
@@ -33,7 +34,7 @@ public class LRgui extends javax.swing.JFrame {
     static HashSet <DropboxAPI.Entry>s2 = new HashSet <DropboxAPI.Entry>();
     
     //static JTree filetree = new JTree((TreeNode)null);
-    static DBNode rootnode = new DBNode();
+    //static DBNode rootnode = com.lightningrod.dropbox.DBApi.treeDir(null);
     
     /*
      * Class that carries out mouse actions
@@ -90,6 +91,26 @@ public class LRgui extends javax.swing.JFrame {
                     if (path == null)
                         break;
                     row = expandNode(tree, child, row);
+                }
+            }   
+            return row;
+        }
+    
+    public int collapseNode (JTree tree,DBNode node, int row){
+            if (node != null  &&  !node.isLeaf()) {
+                tree.collapseRow(row);
+                for (int index = 0; row + 1 < tree.getRowCount() && index < node.getChildCount();index++){
+                    row++;
+                    DBNode child = (DBNode)node.getChildAt(index);
+                    if (child == null)
+                        break;
+                    TreePath path;
+                    while ((path = tree.getPathForRow(row)) != null  &&
+                            path.getLastPathComponent() != child)
+                        row++;
+                    if (path == null)
+                        break;
+                    row = collapseNode(tree, child, row);
                 }
             }   
             return row;
@@ -320,7 +341,7 @@ public class LRgui extends javax.swing.JFrame {
             }
         }
         // Contract Tree
-        int dummy = expandNode(filetreedisplay,rootnode,-1);
+        int dummy = collapseNode(filetreedisplay,rootnode,-1);
         
         ((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
         filetreedisplay.revalidate();
