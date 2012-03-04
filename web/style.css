@@ -23,6 +23,11 @@
 	color: white;
 }
 
+#navigation a:hover{
+	color:yellow;
+	text-decoration: none;
+}
+
 #navigation h1{
 	color: white;
 	padding-bottom: 5px;
