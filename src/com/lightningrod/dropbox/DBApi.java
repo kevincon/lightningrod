@@ -24,7 +24,7 @@ public class DBApi {
 	
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
-        final static private String ROOT_FOLDER = "lightning_rod";
+        final static public String ROOT_FOLDER = "lightning_rod";
         
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
@@ -37,18 +37,13 @@ public class DBApi {
         /**
          * 
          */
-        public DBApi() {
+        public DBApi(String rd) {
 		//create dropbox api and session objects based on app key/secret
 		this.appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
 		this.session = new WebAuthSession(appKeys, ACCESS_TYPE);
 		this.mDBApi = new DropboxAPI<WebAuthSession>(session);
                 
-                String pwd = new File(".").getAbsolutePath();
-                this.root_drive = String.valueOf(pwd.charAt(0));
-                if (!(this.root_drive.equals("/")))
-                    this.root_drive = this.root_drive + ":" + File.separator;
-                System.out.println("test:\t" + 
-                        this.getLocalPath("testfile.txt"));
+                this.root_drive = rd;
 	}
 	
         /**
@@ -267,20 +262,6 @@ public class DBApi {
 		session.unlink();
 	}
         
-        /**
-         * Backup the root Dropbox folder.
-         * @param newdir The new name of the folder.
-         * @return True if successfully backed up, false otherwise.
-         */
-        public boolean backupFolder(String newdir) {
-            File f = new File(root_drive + ROOT_FOLDER);
-            boolean ret = f.renameTo(new File(root_drive + newdir));
-            if (ret) {
-                System.out.println("Backup of Dropbox to " + newdir + "succeeded.");
-            } else {
-                System.out.println("Backup of Dropbox to " + newdir + "failed.");
-            }
-            return ret;
-        }
+        
 	
 }
