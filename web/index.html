@@ -3,7 +3,10 @@
   <head>
     <meta content="text/html; charset=ISO-8859-1"
       http-equiv="Content-Type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lightning Rod: Linking the Cloud to your Portable Drive</title>
+    <link rel="icon" 
+          href="favicon.ico">
     <!-- CSS Styles Folio -->
     <link rel="stylesheet" href="bootstrap.css">
 	<script type="text/javascript" src="jquery.js"></script>
@@ -26,41 +29,101 @@
       </div> <!-- /navbar-inner --> 
     </div> <!-- /navbar -->
     <!-- BEGIN image -->
-    <div class="row-fluid" style="background-image: url('cloud pattern mike.png'); background-position:center;" overflow="hidden" background>
+    <div class="row" style="background-image: url('cloud pattern mike.png'); background-position:center;" overflow="hidden" background>
       <body bgcolor="#666666">
       <center><img src="header logo cloud.png"></center>
     </div>
-    <div class="row-fluid" style="background-color:0044aa" overflow="hidden">
+    <div class="row" style="background-color:0044aa" overflow="hidden">
       <center><img src="header logo sky.png"></center>
     </div>
-    <div class="row-fluid" style="background-color:784421" overflow="hidden">
+    <div class="row" style="background-color:784421" overflow="hidden">
       <center><img src="header logo ground.png"></center>
     </div> 
     <!-- END image -->
-    <div id="home-div" class="container-fluid" style="display: block">
+    <div style="margin: 10px"></div>
+    <div id="home-div" class="container" style="display: block">
       <div class="row">
-      <p></p>
-      </div>
-      <div class="row-fluid">
         <div class="span12">
           <center><a class="btn" href="#">
             <h2>Download</h2>
           </a></center>
         </div>
       </div>
-      <div class="row-fluid">
-        <div class="span12">
+      <div class="row">
+        <div class="span4 offset4">
           <p>
             Lightning Rod is a Java-based Dropbox client that connects your flash drive to the cloud.
           </p>
         </div>
       </div>
     </div>
-    <div id="about-div" class="container-fluid" style="display: none">
-      About Div
+    <div id="about-div" class="container" style="display: none">
+      <div class="span2">
+        <h3>About</h3>
+      </div>
+      <div class="span4">
+        <p>
+          Dropbox is great...when you have access to their desktop client. 
+          But you can't use the desktop client on public computers in labs, 
+          libraries, and internet cafes because you're not given admin 
+          privileges to install software.
+        </p>
+        <p>
+          Dropbox does have a terrific 
+          website that lets you download individual files (or multiple 
+          files as a zip archive), but your changes aren't synced until 
+          you re-upload the file to the website. Also, Dropbox's website 
+          doesn't let you upload entire folders, so it can be a real hassle 
+          to work with Dropbox files on a public computer.
+        </p>
+        <p>
+          We're building a 
+          Dropbox client from scratch that can from a flash drive. We call 
+          it "Lightning Rod."
+        </p>
+      </div>
     </div>
-    <div id="faq-div" class="container-fluid" style="display: none">
-      FAQ Div
+    <div id="faq-div" class="container" style="display: none">
+      <div class="span2">
+        <h2>FAQ</h2>
+      </div>
+      <div class="span6">
+        <ol>
+          <li>
+            <p><b>What is Lightning Rod?</b></p>
+            <p>Lightning Rod is a Dropbox client for flash drives.</p>
+          </li>
+<!--
+2) Wait, doesn't Dropbox already have a client?
+	If you are using a computer that has restrictions on installing programs, 
+	(like in a computer lab, library, or internet cafe), you won't be allowed to install 
+	Dropbox's desktop client.
+	
+	That's where Lightning Rod comes in. Lightning Rod allows you to change/upload/download
+	your Dropbox files on your flash drive, and any changes you make will be synced automatically.
+
+3) Will this work on all computers I take my flash drive with Lightning Rod to?
+	-Yes! Lightning was designed to use Java, which most computers
+	have (Macs even come with it already installed). If you do not
+	have the latest version of Java, you can get it <link>here.</link>
+	
+4) Is there any registration required?
+	-All you need is a Dropbox account.
+
+5) Wait! I'm experiencing *insert problem here*!
+	-Send an email with the description of your problem to 
+	support@getlightningrod.com and we will address your issue
+	as soon as we can!
+	
+6) This is awesome! Can I hire you?
+	-Maybe! Send us an email at contact@getlightningrod.com.
+
+7) How did you find the time to make this?
+	-Lightning Rod was created in a matter of 30 hours at the Angelhack
+	hackathon in Boston, MA in March 2012.
+-->
+        </ol>
+      </div>
     </div>
 	<script type="text/javascript" src="index.js"></script>
   </body>
