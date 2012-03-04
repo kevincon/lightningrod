@@ -14,6 +14,10 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Convenience class for Dropbox methods.
+ * @author Kevin Conley
+ */
 public class DBApi {
 	final static private String APP_KEY = "icbm0h0d2th6cm5";
 	final static private String APP_SECRET = "7x7g643tj17wm7w";
@@ -30,29 +34,35 @@ public class DBApi {
 	private Entry root;
         private String root_drive;
 	
-	public DBApi() {
+        /**
+         * 
+         */
+        public DBApi() {
 		//create dropbox api and session objects based on app key/secret
 		this.appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
 		this.session = new WebAuthSession(appKeys, ACCESS_TYPE);
 		this.mDBApi = new DropboxAPI<WebAuthSession>(session);
                 
-                File pwd = new File(".");
-                this.root_drive = String.valueOf(pwd.getAbsolutePath().charAt(0));
+                String pwd = new File(".").getAbsolutePath();
+                this.root_drive = String.valueOf(pwd.charAt(0));
                 if (!(this.root_drive.equals("/")))
                     this.root_drive = this.root_drive + ":" + File.separator;
-                System.out.println("test:\t" + this.getLocalPath("testfile.txt"));
+                System.out.println("test:\t" + 
+                        this.getLocalPath("testfile.txt"));
 	}
 	
-	public boolean login() {
+        /**
+         * Login user to Dropbox.
+         * @return True if successful, false otherwise.
+         */
+        public boolean login() {
 		if (!this.authorize()) {
 			return false;
 		} else {
-			//TODO need a way to stop here so user can confirm they've approved the app 
-			
-			//let user let us know they've authorized the app
-			
+			//TODO stop here so user can confirm app approval 
 			Scanner readUserInput=new Scanner(System.in); 
-			System.out.println("Press enter after approving Lightning Rod.");
+			System.out.println("Press enter after "
+                                + "approving Lightning Rod.");
 			readUserInput.nextLine(); 
 			
 			return authenticate();
@@ -87,8 +97,11 @@ public class DBApi {
 		}	
 	}
 	
-        //construct the tree, using pre-order recursive traversal
-	public void treeDir(Entry node) {
+        /**
+         * Construct the tree, using pre-order recursive traversal.
+         * @param node The Entry node used to start the traversal.
+         */
+        public void treeDir(Entry node) {
 		if (node == null)
 			node = updateTree(node);
 		else if (node.isDir)
@@ -98,14 +111,19 @@ public class DBApi {
 		if(node.contents == null)
 			return;
 		for (Entry e : node.contents) {
-			//TODO instead of printing out here, construct tree for Bill
+			//TODO construct tree for Bill
 			//System.out.print("\t");
 			treeDir(e);
 		}
 	}
 	
-        //update tree from node's perspective (just one level of children)
-	public Entry updateTree(Entry node) {
+        //
+        /**
+         * Update tree from node's perspective (just one level of children).
+         * @param node Entry node to update.
+         * @return The updated Entry node, otherwise null.
+         */
+        public Entry updateTree(Entry node) {
 		String path;
 		if (node == null) {
 			path = "/";
@@ -121,13 +139,22 @@ public class DBApi {
 		}
 	}
 	
-	public Entry getRoot() {
+        /**
+         * Update and return the root Entry node.
+         * @return The updated root Entry node.
+         */
+        public Entry getRoot() {
 		return (this.root = updateTree(root));
 	}
 
-        //add file to Dropbox
+        //
         //creates parent directories if necessary
         //return new Dropbox entry or null if failed
+        /**
+         * Add completely new file to Dropbox.
+         * @param f The File object to add to Dropbox.
+         * @return The Dropbox Entry node for the new file, or null otherwise.
+         */
         public Entry addFile(File f) {
             if (f == null) 
                 return null;
@@ -149,8 +176,11 @@ public class DBApi {
             
         }
     
-        //update local file on Dropbox
-        //return true if successful, false otherwise
+        /**
+         * Update file on Dropbox based on local modification.
+         * @param se Key/value pair for Dropbox Entry and File object to modify.
+         * @return True if successful, false otherwise.
+         */
         public boolean updateFile(SimpleEntry<Entry, File> se) {
             Entry e = se.getKey();
             File f = se.getValue();
@@ -171,9 +201,11 @@ public class DBApi {
             }
         }
             
-        
-        //delete file from Dropbox
-        //returns true if successful, false otherwise
+        /**
+         * Delete file from Dropbox's server.
+         * @param node The Dropbox Entry node to delete from their server.
+         * @return True if successful, false otherwise.
+         */
         public boolean deleteFile(Entry node) {
             try {
                 mDBApi.delete(node.path);
@@ -183,12 +215,14 @@ public class DBApi {
                 return false;
             }
         }
-        
-        
-        //download file described by node
-        //does not take into account whether file already exists or not
-        //that's up to us to decide whether or not it matters
-        //returns File object if successful, null otherwise
+
+        /**
+         * Download file from Dropbox to local file system.
+         * Note: Doesn't take into account whether file already exists or not.
+         *      That's up to us to decide whether or not it matters.
+         * @param node
+         * @return File object of downloaded file, null otherwise.
+         */
         public File downloadFile(Entry node) {
             if (node == null)
                 return null;
@@ -222,8 +256,10 @@ public class DBApi {
             return root_drive + ROOT_FOLDER + File.separator + path;
         }
         
-        //disconnect API, remove user session
-	public void disconnect() {
+        /**
+         * Disconnect API, remove user session.
+         */
+        public void disconnect() {
 		session.unlink();
 	}
 	
