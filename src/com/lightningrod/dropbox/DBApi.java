@@ -9,6 +9,7 @@ import com.dropbox.client2.session.WebAuthSession;
 import com.dropbox.client2.session.WebAuthSession.WebAuthInfo;
 import com.lightningrod.app.BareBonesBrowserLaunch;
 import com.lightningrod.io.FileMonitorAdvanced;
+import com.lightningrod.gui.DBNode;
 import java.io.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Scanner;
@@ -98,24 +99,28 @@ public class DBApi {
         /**
          * Construct the tree, using pre-order recursive traversal.
          * @param node The Entry node used to start the traversal.
+         * @return The constructed DBNode.
          */
-        public void treeDir(Entry node) {
+        public DBNode treeDir(Entry node) {
 		if (node == null)
 			node = updateTree(node);
 		else if (node.isDir)
 			node = updateTree(node);
 		System.out.println(node.fileName());
-                File ret = downloadFile(node);
-                if (ret != null) {
-                    this.monitor.addFile(ret, node);
-                }
+                //
+                DBNode n = new DBNode(node); 
+                //File ret = downloadFile(node);
+                //if (ret != null) {
+                    //this.monitor.addFile(ret, node);
+                //}
 		if(node.contents == null)
-			return;
+			return n;
 		for (Entry e : node.contents) {
 			//TODO construct tree for Bill
 			//System.out.print("\t");
 			treeDir(e);
 		}
+                return n;
 	}
 	
         //
