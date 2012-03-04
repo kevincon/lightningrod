@@ -128,20 +128,52 @@ public class DBApi {
 	}
 
         //add file to Dropbox
-        public addFile(Entry node) {
+        //creates parent directories if necessary
+        //return new Dropbox entry or null if failed
+        public Entry addFile(File f) {
+            if (f == null) 
+                return null;
+            String strip = root_drive + ROOT_FOLDER;
+            System.out.println(strip);
+            System.out.println(f.getAbsolutePath());
+            String path = f.getAbsolutePath().replaceFirst(strip, "");
+            System.out.println(path);
+            try {
+                InputStream in = new FileInputStream(f);
+                return mDBApi.putFile(path, in, f.length(), null, null);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            } catch (DropboxException ex) {
+                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
             
         }
     
-        /*
-        //delete file from Dropbox
-        public deleteFile() {
+        //update local file on Dropbox
+        //return true if successful, false otherwise
+        //public boolean updateFile(Set<SimpleEntry, File>) {
             
+        //}
+        
+        //delete file from Dropbox
+        //returns true if successful, false otherwise
+        public boolean deleteFile(Entry node) {
+            try {
+                mDBApi.delete(node.path);
+                return true;
+            } catch (DropboxException ex) {
+                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
         }
-        */
+        
         
         //download file described by node
         //does not take into account whether file already exists or not
         //that's up to us to decide whether or not it matters
+        //returns File object if successful, null otherwise
         public File downloadFile(Entry node) {
             if (node == null)
                 return null;
@@ -171,7 +203,7 @@ public class DBApi {
         }
         
         //Add on "ROOT_FOLDER/path" to root_drive
-        private String getLocalPath(String path) {
+        public String getLocalPath(String path) {
             return root_drive + ROOT_FOLDER + File.separator + path;
         }
         

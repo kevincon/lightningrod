@@ -1,6 +1,7 @@
 package com.lightningrod.app;
 
 import com.lightningrod.dropbox.DBApi;
+import java.io.File;
 
 public class DBTest {
 	
@@ -22,6 +23,10 @@ public class DBTest {
 			
 			//print out tree
 			db.treeDir(db.getRoot());
+                        //db.getRoot();
+                        
+                        //File f = new File(db.getLocalPath("testdir/test.txt"));
+                        //db.addFile(f);
 		}
 
 		db.disconnect();
