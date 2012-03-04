@@ -198,7 +198,7 @@ public class LRgui extends javax.swing.JFrame {
         com.lightningrod.gui.DBNode e1 = new com.lightningrod.gui.DBNode(entry1,true);
         
         DropboxAPI.Entry entry2 = new DropboxAPI.Entry();
-        entry2.path = "a";
+        entry2.path = "ab";
         com.lightningrod.gui.DBNode e2 = new com.lightningrod.gui.DBNode(entry2);
         
         DropboxAPI.Entry entry3 = new DropboxAPI.Entry();
@@ -206,7 +206,7 @@ public class LRgui extends javax.swing.JFrame {
         com.lightningrod.gui.DBNode e3 = new com.lightningrod.gui.DBNode(entry3);
         
         DropboxAPI.Entry entry4 = new DropboxAPI.Entry();
-        entry4.path = "test4";
+        entry4.path = "a";
         com.lightningrod.gui.DBNode e4 = new com.lightningrod.gui.DBNode(entry4,true);
         
         DropboxAPI.Entry entry5 = new DropboxAPI.Entry();

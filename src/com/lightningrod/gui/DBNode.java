@@ -49,9 +49,21 @@ class DBNode extends DefaultMutableTreeNode {
         */
     }
     
+    /*
+     * ONLY USED FOR TESTING
+     */
     public DBNode(Object dbEntry, boolean direct) {
         super(dbEntry,direct);
         DropboxAPI.Entry entry = (DropboxAPI.Entry)dbEntry;
+    }
+    
+    /*
+     * Override add method to allow for sorting of files/folders
+     */
+    @Override
+    public void add(MutableTreeNode newChild) {
+        super.add(newChild);
+        Collections.sort(this.children, nodeComparator);
     }
 
     /*
@@ -83,11 +95,6 @@ class DBNode extends DefaultMutableTreeNode {
         return this.allowsChildren;
     }
     
-    @Override
-    public void add(MutableTreeNode newChild) {
-        super.add(newChild);
-        Collections.sort(this.children, nodeComparator);
-    }
     
     /*
     *   Overrides the DefaultMutableTreeNode toString method for use when
@@ -106,7 +113,30 @@ class DBNode extends DefaultMutableTreeNode {
     protected Comparator nodeComparator = new Comparator () {
         @Override
         public int compare(Object o1, Object o2) {
-            return o1.toString().compareToIgnoreCase(o2.toString());
+            // Check object values
+            if(((DBNode)o1).childrenAllowed()){ 
+            //if(((DropboxAPI.Entry)(((DBNode)o1).getUserObject())).isDir){ -PUT BACK IN AFTER TESTING
+                //if(((DropboxAPI.Entry)o1).isDir){
+                if(((DBNode)o2).childrenAllowed()){
+                    // o1 directory and o2 directory
+                    return o1.toString().compareToIgnoreCase(o2.toString());
+                }
+                else{
+                    // o1 directory and o2 file -> file first
+                    return -1;
+                }
+            }else{
+                if(((DBNode)o2).childrenAllowed()){
+                //if(((DBNode)o2).childrenAllowed()){
+                //if(((DropboxAPI.Entry)(((DBNode)o2).getUserObject())).isDir){ - PUT BACK IN AFTER TESTING
+                    // o1 file and o2 directory -> file first
+                    return 1;
+                }
+                else{
+                    // o1 file and o2 file
+                    return o1.toString().compareToIgnoreCase(o2.toString());
+                }
+            }
         }
     };
     // </editor-fold>
