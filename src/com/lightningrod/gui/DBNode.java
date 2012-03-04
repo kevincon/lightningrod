@@ -5,8 +5,11 @@
 package com.lightningrod.gui;
 
 import com.dropbox.client2.DropboxAPI;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 
 /**
  * A class that defines a Node in the DropBox File Structure
@@ -80,6 +83,12 @@ class DBNode extends DefaultMutableTreeNode {
         return this.allowsChildren;
     }
     
+    @Override
+    public void add(MutableTreeNode newChild) {
+        super.add(newChild);
+        Collections.sort(this.children, nodeComparator);
+    }
+    
     /*
     *   Overrides the DefaultMutableTreeNode toString method for use when
     *   displaying file structure
@@ -94,11 +103,11 @@ class DBNode extends DefaultMutableTreeNode {
         }
     }
     
-    /* NOT NEEDED!?!?!?
-    public int compare(Object o1, Object o2) {
-        return o1.toString().compareToIgnoreCase(o2.toString());
-    }
-    */
-
+    protected Comparator nodeComparator = new Comparator () {
+        @Override
+        public int compare(Object o1, Object o2) {
+            return o1.toString().compareToIgnoreCase(o2.toString());
+        }
+    };
     // </editor-fold>
 }   // END CLASS DBnode
