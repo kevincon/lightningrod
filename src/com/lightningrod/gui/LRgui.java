@@ -376,8 +376,6 @@ public class LRgui extends javax.swing.JFrame {
                 node.setSelected(false);
                 dbapiobject.deleteLocalFile(entry);
             }
-            
-            
             else if((paths.contains(pathval) && (!sel.contains(pathval)))){
                 // Only set node as selected
                 node.setSelected(true);
