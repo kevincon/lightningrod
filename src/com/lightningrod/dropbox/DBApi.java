@@ -1,7 +1,6 @@
 package com.lightningrod.dropbox;
 
 import java.util.Scanner;
-
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.DropboxAPI.Entry;
 import com.dropbox.client2.exception.DropboxException;
@@ -10,6 +9,12 @@ import com.dropbox.client2.session.WebAuthSession;
 import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.WebAuthSession.WebAuthInfo;
 import com.lightningrod.app.BareBonesBrowserLaunch;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBApi {
 	final static private String APP_KEY = "icbm0h0d2th6cm5";
@@ -17,18 +22,27 @@ public class DBApi {
 	
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
+        final static private String ROOT_FOLDER = "lightning_rod";
+        
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
 	private AppKeyPair appKeys;
 	private WebAuthInfo auth;
 	
 	private Entry root;
+        private String root_drive;
 	
 	public DBApi() {
 		//create dropbox api and session objects based on app key/secret
 		this.appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
 		this.session = new WebAuthSession(appKeys, ACCESS_TYPE);
 		this.mDBApi = new DropboxAPI<WebAuthSession>(session);
+                
+                File pwd = new File(".");
+                this.root_drive = String.valueOf(pwd.getAbsolutePath().charAt(0));
+                if (!(this.root_drive.equals("/")))
+                    this.root_drive = this.root_drive + ":" + File.separator;
+                System.out.println("test:\t" + getLocalPath("testfile.txt"));
 	}
 	
 	public boolean login() {
@@ -79,20 +93,20 @@ public class DBApi {
 	
 	public void treeDir(Entry node) {
 		if (node == null)
-			updateTree(node);
+			node = updateTree(node);
 		else if (node.isDir)
-			updateTree(node);
+			node = updateTree(node);
 		System.out.println(node.fileName());
 		if(node.contents == null)
 			return;
 		for (Entry e : node.contents) {
 			//TODO instead of printing out here, construct tree for Bill
-			System.out.print("\t");
+			//System.out.print("\t");
 			treeDir(e);
 		}
 	}
 	
-	public boolean updateTree(Entry node) {
+	public Entry updateTree(Entry node) {
 		String path;
 		if (node == null) {
 			path = "/";
@@ -101,19 +115,53 @@ public class DBApi {
 			System.out.println(path);
 		}
 		try {
-			node = mDBApi.metadata(path, 0, null, true, null);
-			return true;
+			return mDBApi.metadata(path, 0, null, true, null);
 		} catch (DropboxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 	}
 	
 	public Entry getRoot() {
-		return this.root;
+		return (this.root = updateTree(root));
 	}
-
+/*
+        //add file to Dropbox
+        public addFile() {
+            
+        }
+        
+        //delete file from Dropbox
+        public deleteFile() {
+            
+        }
+        */
+        
+        public File downloadFile(Entry node) {
+            if (node == null)
+                return null;
+            File f = new File(getLocalPath(node.path));
+            try {
+                OutputStream out = new FileOutputStream(f);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+            try {
+                mDBApi.getFile(node.path, null, null, null);
+                return f;
+            } catch (DropboxException ex) {
+                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
+        
+        //Add on "ROOT_FOLDER/path" to root_drive
+        private String getLocalPath(String path) {
+            return root_drive + ROOT_FOLDER + File.separator + path;
+        }
+        
 	public void disconnect() {
 		session.unlink();
 	}
