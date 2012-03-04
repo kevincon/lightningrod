@@ -188,6 +188,9 @@
           <Dimension value="[146, 40]"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="syncStatus">
       <Properties>
@@ -206,6 +209,9 @@
           <Dimension value="[146, 40]"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="usbStatus">
       <Properties>
@@ -224,6 +230,9 @@
           <Dimension value="[146, 40]"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="dbStatus">
       <Properties>

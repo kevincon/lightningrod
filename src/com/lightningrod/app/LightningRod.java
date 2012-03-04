@@ -5,6 +5,7 @@ import com.lightningrod.dropbox.DBSync;
 import com.lightningrod.gui.DBNode;
 import com.lightningrod.io.Backup;
 import com.lightningrod.io.FileMonitorAdvanced;
+import com.lightningrod.gui.LRgui;
 import java.io.File;
 
 /**
@@ -58,7 +59,7 @@ public class LightningRod {
 		} else {
                     
                     // Initialize GUI and Populate File Architecture
-                    com.lightningrod.gui.LRgui.setupGUI(db);
+                    LRgui.setupGUI(db);
 
                     //start file monitoring timer
                     monitor.addListener(monitor);
