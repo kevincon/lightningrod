@@ -4,7 +4,7 @@ import java.io.File;
 
 public class FileMonitorAdvancedTest {
     public static void main (String args[]) {
-        FileMonitorAdvanced monitor = new FileMonitorAdvanced (1000L, 5000L,
+        FileMonitorAdvanced monitor = new FileMonitorAdvanced (3000L, 5000L,
             new File("/home/monk/test_dropbox"));
 
         monitor.addFile (new File ("/home/monk/test_dropbox/test1"), null);
