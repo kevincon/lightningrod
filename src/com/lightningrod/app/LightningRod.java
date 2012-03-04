@@ -58,6 +58,9 @@ public class LightningRod {
 		} else {
                     //download entire Dropbox folder, add file monitors
                     DBNode rootnode = db.treeDir(db.getRoot());
+                    
+                    // Initialize GUI and Populate File Architecture
+                    com.lightningrod.gui.LRgui.setupGUI(rootnode);
 
                     //start file monitoring timer
                     monitor.addListener(monitor);
