@@ -195,21 +195,18 @@ public class LRgui extends javax.swing.JFrame {
         syncstatusBar.setMaximumSize(new java.awt.Dimension(32767, 40));
         syncstatusBar.setMinimumSize(new java.awt.Dimension(10, 40));
         syncstatusBar.setPreferredSize(new java.awt.Dimension(146, 40));
-        syncstatusBar.setSize(new java.awt.Dimension(146, 40));
 
         syncStatus.setText("Sync/Update Status");
 
         usbspaceBar.setMaximumSize(new java.awt.Dimension(32767, 40));
         usbspaceBar.setMinimumSize(new java.awt.Dimension(10, 40));
         usbspaceBar.setPreferredSize(new java.awt.Dimension(146, 40));
-        usbspaceBar.setSize(new java.awt.Dimension(146, 40));
 
         usbStatus.setText("USB Storage");
 
         dbspaceBar.setMaximumSize(new java.awt.Dimension(32767, 40));
         dbspaceBar.setMinimumSize(new java.awt.Dimension(10, 40));
         dbspaceBar.setPreferredSize(new java.awt.Dimension(146, 40));
-        dbspaceBar.setSize(new java.awt.Dimension(146, 40));
 
         dbStatus.setText("DropBox Storage");
 
@@ -270,7 +267,7 @@ public class LRgui extends javax.swing.JFrame {
                             .add(usbspaceBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(syncstatusBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(dbspaceBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(19, Short.MAX_VALUE))))
+                        .addContainerGap(24, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -426,6 +423,15 @@ public class LRgui extends javax.swing.JFrame {
         filetreedisplay.repaint();
     }//GEN-LAST:event_deselectAllActionPerformed
 
+    private static void resetBars(){
+        // Zero progress bars
+        //syncstatusBar.setValue(syncstatusBar.getMinimum());
+        syncstatusBar.setStringPainted(true);
+        //usbspaceBar.setValue(usbspaceBar.getMinimum());
+        usbspaceBar.setStringPainted(true);
+        //dbspaceBar.setValue(dbspaceBar.getMinimum());
+        dbspaceBar.setStringPainted(true);
+    }
     
     public static void setupGUI(DBApi db){
         // <editor-fold>
@@ -440,6 +446,9 @@ public class LRgui extends javax.swing.JFrame {
         del.clear();
         
         dbapiobject = db;
+        
+        
+        
         
         /*
          * Set the Nimbus look and feel
@@ -480,11 +489,13 @@ public class LRgui extends javax.swing.JFrame {
                 new LRgui().setVisible(true);
             }
         });
+        // Reset statusbars
+        resetBars();
     }// </editor-fold>
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel dbStatus;
-    private javax.swing.JProgressBar dbspaceBar;
+    private static javax.swing.JProgressBar dbspaceBar;
     private javax.swing.JButton deselectAll;
     private javax.swing.JScrollPane filedisplayPane;
     private javax.swing.JTree filetreedisplay;
@@ -495,9 +506,9 @@ public class LRgui extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuExit;
     private javax.swing.JButton selectAll;
     private javax.swing.JLabel syncStatus;
-    private javax.swing.JProgressBar syncstatusBar;
+    private static javax.swing.JProgressBar syncstatusBar;
     private javax.swing.JButton updateFiles;
     private javax.swing.JLabel usbStatus;
-    private javax.swing.JProgressBar usbspaceBar;
+    private static javax.swing.JProgressBar usbspaceBar;
     // End of variables declaration//GEN-END:variables
 }
