@@ -195,34 +195,39 @@ public class DBApi {
         public Entry addFile(File f) {
             if (f == null) 
                 return null;
+            monitor.setTimerNoop();
             String strip = root_drive + ROOT_FOLDER;
             //System.out.println(strip);
             //System.out.println(f.getAbsolutePath());
             String path = f.getAbsolutePath().replaceFirst(strip, "");
             //System.out.println(path);
             if (f.isDirectory()) {
+                Entry ret = null;
                 try {
-                    Entry ret = mDBApi.createFolder(path);
+                    ret = mDBApi.createFolder(path);
                     this.monitor.addFile(f, ret);
                     pathnames.add(ret.path);
-                    return ret;
                 } catch (DropboxException ex) {
                     Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
+                } finally {
+                    monitor.clearTimerNoop();
+                    return ret;
                 }
+                
             } else {
+                Entry ret = null;
                 try {
                     InputStream in = new FileInputStream(f);
-                    Entry ret = mDBApi.putFile(path, in, f.length(), null, null);
+                    ret = mDBApi.putFile(path, in, f.length(), null, null);
                     this.monitor.addFile(f, ret);
                     pathnames.add(ret.path);
-                    return ret;
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
                 } catch (DropboxException ex) {
                     Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
+                }  finally {
+                    monitor.clearTimerNoop();
+                    return ret;
                 }
             }
         }
@@ -242,16 +247,21 @@ public class DBApi {
             if (f.isDirectory())
                 return false;
             
+            monitor.setTimerNoop();
+            boolean result = false;
             try {
                 InputStream in = new FileInputStream(f);
                 mDBApi.putFile(e.path, in, f.length(), e.rev, null);
-                return true;
+                result = true;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                return false;
+                result = false;
             } catch (DropboxException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                return false;
+                result = false;
+            } finally {
+                monitor.clearTimerNoop();
+                return result;
             }
         }
             
@@ -276,9 +286,11 @@ public class DBApi {
          * @return True if successful, false otherwise.
          */
         public boolean deleteLocalFile(Entry node) {
+            monitor.setTimerNoop();
             File f = new File(getLocalPath(node.path));
             boolean ret = f.delete();
             this.monitor.removeFile(f);
+            monitor.clearTimerNoop();
             return ret;
         }
 
@@ -292,6 +304,7 @@ public class DBApi {
         public File downloadFile(Entry node) {
             if (node == null)
                 return null;
+            monitor.setTimerNoop();
             File f = new File(getLocalPath(node.path));
             try {
                 this.monitor.addFile(f, node);
@@ -304,17 +317,19 @@ public class DBApi {
 
                     mDBApi.getFile(node.path, null, out, null);
                 }
-                return f;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
                 f.delete();
-                return null;
+                f = null;
             } catch (IOException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+                f = null;
             } catch (DropboxException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+                f = null;
+            } finally {
+                monitor.clearTimerNoop();
+                return f;
             }
         }
 
