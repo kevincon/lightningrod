@@ -1,6 +1,7 @@
 package com.lightningrod.app;
 
 import com.lightningrod.dropbox.DBApi;
+import com.lightningrod.dropbox.DBSync;
 import com.lightningrod.io.Backup;
 import com.lightningrod.io.FileMonitorAdvanced;
 import java.io.File;
@@ -36,9 +37,12 @@ public class LightningRod {
                     //TODO Warn user that Dropbox folder was backed up.
                 }
                 
-                //create file monitoring objects
+                //create file monitoring object
                 FileMonitorAdvanced monitor = new FileMonitorAdvanced (3000L, 5000L,
                 new File(root_path));
+                
+                //create Dropbox sync monitoring object
+                DBSync sync = new DBSync(monitor, 3000L);
                 
                 //create db api object
 		DBApi db = new DBApi(root_drive, monitor);
@@ -55,11 +59,11 @@ public class LightningRod {
                     monitor.addListener(monitor);
                     monitor.startTimer();
                     
-                    //TODO start Dropbox sync timer
-                    
+                    //start Dropbox sync timer
+                    sync.startTimer();
                     while(true);
                 }
 
-		db.logout();
+		//db.logout();
 	}
 }
