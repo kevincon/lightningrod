@@ -5,7 +5,7 @@ import java.io.File;
 
 public class FileMonitorAdvancedTest {
     public static void main (String args[]) {
-        FileMonitorAdvanced monitor = new FileMonitorAdvanced (3000L, 5000L,
+        /*FileMonitorAdvanced monitor = new FileMonitorAdvanced (3000L, 5000L,
             new File("/home/monk/test_dropbox"));
         DBSync sync = new DBSync(monitor, 3000L);
 
@@ -18,6 +18,6 @@ public class FileMonitorAdvancedTest {
         sync.startTimer();
 
         while (true) ;
-        //monitor.stopTimer();
+        //monitor.stopTimer();*/
     }
 }

@@ -2,6 +2,7 @@ package com.lightningrod.app;
 
 import com.lightningrod.dropbox.DBApi;
 import com.lightningrod.dropbox.DBSync;
+import com.lightningrod.gui.DBNode;
 import com.lightningrod.io.Backup;
 import com.lightningrod.io.FileMonitorAdvanced;
 import java.io.File;
@@ -55,15 +56,16 @@ public class LightningRod {
                     //login failed
                     return;
 		} else {
-                    //download entire Dropbox folder, add file monitors
-                    db.treeDir(db.getRoot());
+                    
+                    // Initialize GUI and Populate File Architecture
+                    com.lightningrod.gui.LRgui.setupGUI(db);
 
                     //start file monitoring timer
-                    monitor.addListener(monitor);
-                    monitor.startTimer();
+                    //monitor.addListener(monitor);
+                    //monitor.startTimer();
                     
                     //start Dropbox sync timer
-                    sync.startTimer();
+                    //sync.startTimer();
                     while(true);
                 }
 

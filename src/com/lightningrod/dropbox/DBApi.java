@@ -9,6 +9,7 @@ import com.dropbox.client2.session.WebAuthSession;
 import com.dropbox.client2.session.WebAuthSession.WebAuthInfo;
 import com.lightningrod.app.BareBonesBrowserLaunch;
 import com.lightningrod.io.FileMonitorAdvanced;
+import com.lightningrod.gui.DBNode;
 import java.io.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Scanner;
@@ -25,7 +26,7 @@ public class DBApi {
 	
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
-        final static public String ROOT_FOLDER = "home/kevin/testdb";
+        final static public String ROOT_FOLDER = "Users/bill/Downloads/testdb";
         
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
@@ -98,24 +99,28 @@ public class DBApi {
         /**
          * Construct the tree, using pre-order recursive traversal.
          * @param node The Entry node used to start the traversal.
+         * @return The constructed DBNode.
          */
-        public void treeDir(Entry node) {
+        public DBNode treeDir(Entry node) {
 		if (node == null)
 			node = updateTree(node);
 		else if (node.isDir)
 			node = updateTree(node);
 		System.out.println(node.fileName());
-                File ret = downloadFile(node);
-                if (ret != null) {
-                    this.monitor.addFile(ret, node);
-                }
+                //
+                DBNode n = new DBNode(node); 
+                //File ret = downloadFile(node);
+                //if (ret != null) {
+                    //this.monitor.addFile(ret, node);
+                //}
 		if(node.contents == null)
-			return;
+			return n;
 		for (Entry e : node.contents) {
 			//TODO construct tree for Bill
 			//System.out.print("\t");
-			treeDir(e);
+			n.add(treeDir(e));
 		}
+                return n;
 	}
 	
         //
@@ -145,8 +150,36 @@ public class DBApi {
          * @return The updated root Entry node.
          */
         public Entry getRoot() {
-		return (this.root = updateTree(root));
+            return (this.root = updateTree(root));
 	}
+        
+        // Returns the Dropbox free space in Megabytes, or -1 if it was not
+        // retrievable.
+        public long getDropboxFreeSpace() {
+            long freeSpace = -1L;
+            try {
+                freeSpace = mDBApi.accountInfo().quota -
+                                (mDBApi.accountInfo().quotaNormal +
+                                 mDBApi.accountInfo().quotaShared);
+            } catch (DropboxException e) {
+                System.out.println("Unable to retrieve Dropbox free space. "
+                        + "Error: " + e.toString());
+            }
+            return freeSpace;
+        }
+        
+        // Returns the root drive free space in Megabytes, or -1 if it was not
+        // retrievable.
+        public long getRootFreeSpace() {
+            long freeSpace = -1L;
+            try {
+                freeSpace = (new File(root_drive)).getFreeSpace();
+            } catch (SecurityException e) {
+                System.out.println("Unable to retrieve root drive free space. "
+                        + "Error: " + e.toString());
+            }
+            return freeSpace;
+        }
 
         //
         //creates parent directories if necessary

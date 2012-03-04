@@ -17,7 +17,7 @@ import javax.swing.tree.TreeNode;
  * The node object is the DropBox Entry Object
  * @author William Etter
  */
-class DBNode extends DefaultMutableTreeNode {
+public class DBNode extends DefaultMutableTreeNode {
     // <editor-fold>
     protected boolean isDirectory;  // Is the node a Directory?
     protected boolean isSelected;   // Is the node selected?    
@@ -37,14 +37,6 @@ class DBNode extends DefaultMutableTreeNode {
     }
     
     /*
-     * ONLY USED FOR TESTING
-     */
-    public DBNode(Object dbEntry, boolean direct) {
-        super(dbEntry,direct);
-        DropboxAPI.Entry entry = (DropboxAPI.Entry)dbEntry;
-    }
-    
-    /*
      * Override add method to allow for sorting of files/folders
      */
     @Override
@@ -52,8 +44,8 @@ class DBNode extends DefaultMutableTreeNode {
         super.add(newChild);
         Collections.sort(this.children, nodeComparator);
         
-        // Determine if parent is selected
-        if(this.isSelected()){
+        // Determine if parent is selected and not the root node
+        if(this.isSelected() && this.getParent() != null){
             // Set child as selected
             ((DBNode)newChild).setSelected(true);
         }      
@@ -80,6 +72,13 @@ class DBNode extends DefaultMutableTreeNode {
                 x = (DBNode)(x.getParent());
             }
         }
+    }
+    
+    /*
+    *   Set the root node selection to true. Only used during startup
+    */
+    public void setRootSelected() {
+        this.isSelected = true;
     }
     
     /*
