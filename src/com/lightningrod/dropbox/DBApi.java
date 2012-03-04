@@ -12,6 +12,7 @@ import com.lightningrod.io.FileMonitorAdvanced;
 import com.lightningrod.gui.DBNode;
 import java.io.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,8 @@ public class DBApi {
 	private Entry root;
         private String root_drive;
         private FileMonitorAdvanced monitor;
+        
+        public HashSet <String>pathnames;
 	
         /**
          * 

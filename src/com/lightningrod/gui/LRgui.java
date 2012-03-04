@@ -21,6 +21,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import com.lightningrod.dropbox.DBApi;
+import java.util.Iterator;
 import javax.swing.tree.*;
 //import javax.swing.tree.TreeSelectionModel;
 
@@ -41,6 +42,8 @@ public class LRgui extends javax.swing.JFrame {
     
     // String HashSet
     static HashSet <String>paths = new HashSet <String>();
+    
+    static DBApi dbapiobject;
     
     //static JTree filetree = new JTree((TreeNode)null);
     static DBNode rootnode;// = com.lightningrod.dropbox.DBApi.treeDir(null);
@@ -335,7 +338,13 @@ public class LRgui extends javax.swing.JFrame {
         newset.clear();
         
         // Update Previous Selection Paths Hashset
+        Iterator<DropboxAPI.Entry> iter = oldset.iterator();
+        while(iter.hasNext()){
+            paths.add(iter.next().path);
+        }
         
+        // Update DBApi Hashset
+        dbapiobject.pathnames = paths;
     }//GEN-LAST:event_updateFilesActionPerformed
 
     private void selectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllActionPerformed
@@ -378,6 +387,8 @@ public class LRgui extends javax.swing.JFrame {
         
         //download entire Dropbox folder, add file monitors
         rootnode = db.treeDir(db.getRoot());
+        
+        dbapiobject = db;
         
         /*
          * Set the Nimbus look and feel
@@ -439,33 +450,3 @@ public class LRgui extends javax.swing.JFrame {
     private javax.swing.JProgressBar usbspaceBar;
     // End of variables declaration//GEN-END:variables
 }
-
-/*
-
-
-
-
-  class ButtonActionListener implements ActionListener {
-    
-
-
-
- 
-
-    public void actionPerformed(ActionEvent ev) {
-      Enumeration e = root.breadthFirstEnumeration();
-      while (e.hasMoreElements()) {
-        CheckNode node = (CheckNode) e.nextElement();
-        if (node.isSelected()) {
-          TreeNode[] nodes = node.getPath();
-          textArea.append("\n" + nodes[0].toString());
-          for (int i = 1; i < nodes.length; i++) {
-            textArea.append("/" + nodes[i].toString());
-          }
-        }
-      }
-    }
-  }
-
-  
- */
