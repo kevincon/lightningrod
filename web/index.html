@@ -6,9 +6,7 @@
     <title>Lightning Rod: Linking the Cloud to your Portable Drive</title>
     <!-- CSS Styles Folio -->
     <link rel="stylesheet" href="bootstrap.css">
-    <link rel="stylesheet/less" href="/path/to/bootstrap.less">
-    <script src="/path/to/less.js"></script>
-    <script type="text/javascript" src="index.js"></script>
+	<script type="text/javascript" src="jquery.js"></script>
     <!-- /CSS Styles Folio -->
   </head>
   <body>
@@ -39,7 +37,7 @@
       <center><img src="header logo ground.png"></center>
     </div> 
     <!-- END image -->
-    <div name="home-div" class="container-fluid">
+    <div id="home-div" class="container-fluid" style="display: block">
       <div class="row">
       <p></p>
       </div>
@@ -53,16 +51,17 @@
       <div class="row-fluid">
         <div class="span12">
           <p>
-            Lightning Rod is a Java-based DropBox client that connects your flash drive to the cloud.
+            Lightning Rod is a Java-based Dropbox client that connects your flash drive to the cloud.
           </p>
         </div>
       </div>
     </div>
-    <div name="about-div" class="container-fluid">
+    <div id="about-div" class="container-fluid" style="display: none">
       About Div
     </div>
-    <div name="faq-div" class="container-fluid">
+    <div id="faq-div" class="container-fluid" style="display: none">
       FAQ Div
     </div>
+	<script type="text/javascript" src="index.js"></script>
   </body>
 </html>
