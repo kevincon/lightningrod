@@ -153,9 +153,6 @@ public class LRgui extends javax.swing.JFrame {
      */
     public LRgui() {
         initComponents();
-        
-        
-        
         syncstatusBar.setValue(0);
         usbspaceBar.setValue(dbapiobject.getRootFreeSpace());
         dbspaceBar.setValue(dbapiobject.getDropboxFreeSpace());
@@ -347,6 +344,8 @@ public class LRgui extends javax.swing.JFrame {
     }//GEN-LAST:event_menuExitActionPerformed
 
     private void updateFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateFilesActionPerformed
+        int counter = 0;
+        int hashsize = 0;
         Enumeration e = rootnode.breadthFirstEnumeration();
         boolean added;
         while (e.hasMoreElements()) {
@@ -391,10 +390,12 @@ public class LRgui extends javax.swing.JFrame {
         rootnode = dbapiobject.treeDir(dbapiobject.getRoot());
         DefaultTreeModel treemodel = new DefaultTreeModel(rootnode);
         filetreedisplay.setModel(treemodel);
-        //((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
         
         // Set Root Node as Selected
         rootnode.setRootSelected();
+        
+        // Size of Hashset for adding
+        hashsize = sel.size();
         
         // Iterate through tree and check if pathname is in Hashset
         e = rootnode.breadthFirstEnumeration();
@@ -416,6 +417,12 @@ public class LRgui extends javax.swing.JFrame {
                 // Download and set as selected
                 dbapiobject.downloadFile(entry);
                 node.setSelectedStupid();
+                counter++;
+                int val = (int)((100*((double)counter/(double)hashsize)));
+                System.out.println(val);
+                syncstatusBar.setValue(val);
+                syncstatusBar.revalidate();
+                syncstatusBar.repaint();
             }
         }
         
@@ -423,6 +430,18 @@ public class LRgui extends javax.swing.JFrame {
         ((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
         filetreedisplay.revalidate();
         filetreedisplay.repaint();
+        
+        // Update Status Bars
+        syncstatusBar.setValue(0);
+        usbspaceBar.setValue(dbapiobject.getRootFreeSpace());
+        dbspaceBar.setValue(dbapiobject.getDropboxFreeSpace());
+        syncstatusBar.revalidate();
+        usbspaceBar.revalidate();
+        dbspaceBar.revalidate();
+        syncstatusBar.repaint();
+        usbspaceBar.repaint();
+        dbspaceBar.repaint();
+        
     }//GEN-LAST:event_updateFilesActionPerformed
 
     private void selectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllActionPerformed
@@ -459,21 +478,9 @@ public class LRgui extends javax.swing.JFrame {
         filetreedisplay.repaint();
     }//GEN-LAST:event_deselectAllActionPerformed
 
-    private static void resetBars(){
-        // Zero progress bars
-        //syncstatusBar.setValue(syncstatusBar.getMinimum());
-        //syncstatusBar.setStringPainted(true);
-        //syncstatusBar
-        //usbspaceBar.setValue(usbspaceBar.getMinimum());
-        //usbspaceBar.setStringPainted(true);
-        //dbspaceBar.setValue(dbspaceBar.getMinimum());
-        dbspaceBar.setStringPainted(true);
-    }
     
     public static void setupGUI(DBApi db){
         // <editor-fold>
-        
-        
         
         oldset.clear();
         newset.clear();
@@ -482,8 +489,6 @@ public class LRgui extends javax.swing.JFrame {
         del.clear();
         
         dbapiobject = db;
-        
-        
         
         
         /*

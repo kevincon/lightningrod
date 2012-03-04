@@ -55,8 +55,8 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
         timer_.cancel();
     }
     
-    public void setTimerNoop() { timerNoop_ = true; }
-    public void clearTimerNoop() { timerNoop_ = false; }
+    public void setTimerNoop() { timersNoop_ = true; }
+    public void clearTimerNoop() { timersNoop_ = false; }
     
     /**
      * Adds a file to monitor for changes and deletion.
