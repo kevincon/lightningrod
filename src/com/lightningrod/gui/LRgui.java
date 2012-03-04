@@ -34,7 +34,7 @@ public class LRgui extends javax.swing.JFrame {
     static HashSet <DropboxAPI.Entry>s2 = new HashSet <DropboxAPI.Entry>();
     
     //static JTree filetree = new JTree((TreeNode)null);
-    //static DBNode rootnode = com.lightningrod.dropbox.DBApi.treeDir(null);
+    static DBNode rootnode;// = com.lightningrod.dropbox.DBApi.treeDir(null);
     
     /*
      * Class that carries out mouse actions
@@ -118,13 +118,12 @@ public class LRgui extends javax.swing.JFrame {
     
 
     /**
-     * Creates new form gui
+     * Creates new gui
      */
     public LRgui() {
         initComponents();
         
         /******* NEW CODE ********/
-        
         // Set Root Node as invisible
         filetreedisplay.setRootVisible(false);
         filetreedisplay.setCellRenderer(new RenderChecks());
@@ -348,10 +347,11 @@ public class LRgui extends javax.swing.JFrame {
         filetreedisplay.repaint();
     }//GEN-LAST:event_deselectAllActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+    
+    public static void setupGUI(DBNode r){
+        // <editor-fold>
+        rootnode = r;
+        
         /*
          * Set the Nimbus look and feel
          */
@@ -386,8 +386,7 @@ public class LRgui extends javax.swing.JFrame {
         
         
         // TEST TEST TEST
-        
-        
+        /*
         DropboxAPI.Entry entry1 = new DropboxAPI.Entry();
         entry1.path = "test1";
         com.lightningrod.gui.DBNode e1 = new com.lightningrod.gui.DBNode(entry1,true);
@@ -434,29 +433,21 @@ public class LRgui extends javax.swing.JFrame {
         e4.add(e5);
         e6.add(e7);
         e7.add(e8);
-        
+        */
         // TEST TEST TEST END
-        
-        
-        
 
-        
-        
-        
-        
        
         /*
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            // <editor-fold>
             @Override
             public void run() {
                 new LRgui().setVisible(true);
             }
         });
-        // </editor-fold>
-    }
+    }// </editor-fold>
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel dbStatus;
     private javax.swing.JProgressBar dbspaceBar;
@@ -508,8 +499,4 @@ public class LRgui extends javax.swing.JFrame {
   }
 
   
-}
-
-
-
  */
