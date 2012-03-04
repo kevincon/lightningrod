@@ -457,6 +457,7 @@ public class LRgui extends javax.swing.JFrame {
         
         // Update CheckBoxes
         ((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
+        int dummy = expandNode(filetreedisplay,rootnode,-1);
         filetreedisplay.revalidate();
         filetreedisplay.repaint();
         
