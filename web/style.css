@@ -1,3 +1,7 @@
+body p {
+	font-size:1.1em;
+}
+
 #logo {
 	background-color:666666;
 	padding-top: 30px;
@@ -23,6 +27,7 @@
 }
 
 #navigation li {
+	font-size:1.1em;
         display:inline;
         background-color:666666;
         padding-left: 5px;
@@ -122,4 +127,14 @@ background: -o-linear-gradient(top, rgba(120,68,33,1) 0%,rgba(58,33,16,1) 54%); 
 background: -ms-linear-gradient(top, rgba(120,68,33,1) 0%,rgba(58,33,16,1) 54%); /* IE10+ */
 background: linear-gradient(top, rgba(120,68,33,1) 0%,rgba(58,33,16,1) 54%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#784421', endColorstr='#3a2110',GradientType=0 ); /* IE6-8 */
+}
+
+#ground b {
+	color:white;
+	font-size:1.4em;
+}
+
+#ground h3 {
+	color:white;
+	font-size:1.5em;
 }
