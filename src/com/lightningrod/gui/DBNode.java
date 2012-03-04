@@ -75,6 +75,20 @@ public class DBNode extends DefaultMutableTreeNode {
     }
     
     /*
+    *   Set the node selection.= to true and all above
+    */
+    public void setSelectedStupid() {
+        this.isSelected = true;
+        // Node is a file and want to select it
+        // Select all parent nodes
+        DBNode x = this;
+        while(x.getParent() != x.getRoot() && !((DBNode)x.getParent()).isSelected()){
+            ((DBNode)x.getParent()).isSelected = true;
+            x = (DBNode)(x.getParent());
+        }
+    }
+    
+    /*
     *   Set the root node selection to true. Only used during startup
     */
     public void setRootSelected() {

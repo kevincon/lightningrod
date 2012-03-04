@@ -385,18 +385,6 @@ public class LRgui extends javax.swing.JFrame {
                 node.setSelectedStupid();
             }
         }
-        /*
-        Iterator<DropboxAPI.Entry> it = sel.iterator();
-        while(it.hasNext()) {
-            dbapiobject.downloadFile(it.next());
-        }
-        
-        it = del.iterator();
-        while(it.hasNext()) {
-            dbapiobject.deleteLocalFile(it.next());
-        }
-        * */
-
         
         // Update CheckBoxes
         ((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
