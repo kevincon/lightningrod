@@ -55,6 +55,9 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
         timer_.cancel();
     }
     
+    public void setTimerNoop() { timerNoop_ = true; }
+    public void clearTimerNoop() { timerNoop_ = false; }
+    
     /**
      * Adds a file to monitor for changes and deletion.
      *
@@ -111,6 +114,7 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
         
         @Override
         public void run() {
+            if (timersNoop_) return;
             // Create a set of all files starting with 
             // localDropboxRootDirectory_. Compare this set with the set of
             // files being monitored. Any files that are new to the set have

@@ -38,6 +38,7 @@ public class FileMonitor {
     private HashMap files_;       // File -> Long
     private Collection listeners_;   // of WeakReference(FileListener)
     private long pollingInterval_;
+    protected boolean timersNoop_ = false;
 
     /**
      * Create a file monitor instance with specified polling interval.
@@ -48,6 +49,7 @@ public class FileMonitor {
         files_ = new HashMap();
         listeners_ = new ArrayList();
         pollingInterval_ = pollingInterval;
+        timersNoop_ = false;
     }
     
     protected void startTimer() {
@@ -131,6 +133,7 @@ public class FileMonitor {
     private class FileMonitorNotifier extends TimerTask {
 
         public void run() {
+            if (timersNoop_) return;
             // Loop over the registered files and see which have changed.
             // Use a copy of the list in case listener wants to alter the
             // list within its fileChanged method.

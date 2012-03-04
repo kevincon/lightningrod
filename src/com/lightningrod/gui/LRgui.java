@@ -22,6 +22,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import com.lightningrod.dropbox.DBApi;
 import java.util.Iterator;
+import javax.swing.*;
 import javax.swing.tree.*;
 //import javax.swing.tree.TreeSelectionModel;
 
@@ -136,7 +137,10 @@ public class LRgui extends javax.swing.JFrame {
         JTextArea textArea = new JTextArea(3,10);
         JScrollPane textPanel = new JScrollPane(textArea);
         JButton button = new JButton("print");
-        
+        JOptionPane.showMessageDialog(this,
+            "Text Message",
+            "MessageBox Title",
+            JOptionPane.INFORMATION_MESSAGE);
         
         /** END NEW CODE **/
     }
