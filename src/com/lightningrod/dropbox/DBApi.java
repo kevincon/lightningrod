@@ -250,17 +250,37 @@ public class DBApi {
                 return null;
             }
         }
-        
-        //Add on "ROOT_FOLDER/path" to root_drive
-        private String getLocalPath(String path) {
+
+        /**
+         * Construct absolute path for a filename.
+         * @param path The file name to add the local file system path to.
+         * @return The absolute path on the file system.
+         */
+        public String getLocalPath(String path) {
             return root_drive + ROOT_FOLDER + File.separator + path;
         }
         
         /**
-         * Disconnect API, remove user session.
+         * Logout user from session.
          */
-        public void disconnect() {
+        public void logout() {
 		session.unlink();
 	}
+        
+        /**
+         * Backup the root Dropbox folder.
+         * @param newdir The new name of the folder.
+         * @return True if successfully backed up, false otherwise.
+         */
+        public boolean backupFolder(String newdir) {
+            File f = new File(root_drive + ROOT_FOLDER);
+            boolean ret = f.renameTo(new File(root_drive + newdir));
+            if (ret) {
+                System.out.println("Backup of Dropbox to " + newdir + "succeeded.");
+            } else {
+                System.out.println("Backup of Dropbox to " + newdir + "failed.");
+            }
+            return ret;
+        }
 	
 }

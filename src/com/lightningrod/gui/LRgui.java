@@ -10,6 +10,7 @@ package com.lightningrod.gui;
 import com.dropbox.client2.DropboxAPI;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Enumeration;
 import java.util.HashSet;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -51,25 +52,70 @@ public class LRgui extends javax.swing.JFrame {
             TreePath  path = mousetree.getPathForRow(treerow);
             if (path != null) {
                 DBNode node = (DBNode)path.getLastPathComponent();
-                boolean isSelected = ! (node.isSelected());
+                boolean isSelected = !(node.isSelected());
                 node.setSelected(isSelected);
                 
                 // Check if node is directory
                 if(node.childrenAllowed()){
                     // If selected expand, otherwise contract
                     if(isSelected){
-                        mousetree.expandPath(path);
+                        //mousetree.expandPath(path);
+                        expandChildren(node,path);
                     }else{
                         mousetree.collapsePath(path);
                     }
                 }
                                     
                 ((DefaultTreeModel) mousetree.getModel()).nodeChanged(node);
-                if (treerow == 0) {
+                //if (treerow == 0) {
                     mousetree.revalidate();
                     mousetree.repaint();
-                } 
+                //} 
             }
+        }
+        
+        public void expandChildren(DBNode n, TreePath orig){
+            TreePath expandpath;
+            // Check if Directory
+            if (n.children() != null) {
+                Enumeration e = n.children();
+                while (e.hasMoreElements()) {
+                    DBNode node = (DBNode) e.nextElement();
+                    expandpath = orig.pathByAddingChild((Object)node);
+                    if(node.childrenAllowed()){
+                        expandChildren(node,expandpath);
+                    }else{
+                        mousetree.expandPath(expandpath);
+                    }
+                    mousetree.expandPath(expandpath);
+                }
+            }
+                
+            /*
+             * for (int i = 0; i < jTree.getRowCount(); i++) {
+            jTree.expandRow(i);
+}
+             */
+            
+            
+            
+            /*
+            TreePath expandpath;
+            if (n.children() != null) {
+                Enumeration e = n.children();
+                while (e.hasMoreElements()) {
+                    DBNode node = (DBNode) e.nextElement();
+                    if(node.childrenAllowed()){
+                        expandChildren(node,orig);
+                    }else{
+                        expandpath = orig.pathByAddingChild((Object)node);
+                        mousetree.expandPath(expandpath);
+                    }
+                }
+            }
+            *
+            */
+            //mousetree.expandPath(orig);
         }
     }
 
@@ -241,7 +287,15 @@ public class LRgui extends javax.swing.JFrame {
         
         DropboxAPI.Entry entry6 = new DropboxAPI.Entry();
         entry6.path = "best6";
-        com.lightningrod.gui.DBNode e6 = new com.lightningrod.gui.DBNode(entry6);
+        com.lightningrod.gui.DBNode e6 = new com.lightningrod.gui.DBNode(entry6,true);
+        
+        DropboxAPI.Entry entry7 = new DropboxAPI.Entry();
+        entry7.path = "best7";
+        com.lightningrod.gui.DBNode e7 = new com.lightningrod.gui.DBNode(entry7,true);
+        
+        DropboxAPI.Entry entry8 = new DropboxAPI.Entry();
+        entry8.path = "best8";
+        com.lightningrod.gui.DBNode e8 = new com.lightningrod.gui.DBNode(entry8);
         
         DropboxAPI.Entry root = new DropboxAPI.Entry();
         root.path = "testr";
@@ -257,6 +311,8 @@ public class LRgui extends javax.swing.JFrame {
         rootnode.add(e4);
         //rootnode.add(e1);
         e4.add(e5);
+        e6.add(e7);
+        e7.add(e8);
         
         // TEST TEST TEST END
         
@@ -293,46 +349,7 @@ public class LRgui extends javax.swing.JFrame {
 
 /*
 
-public class CheckNodeTreeExample extends JFrame {
-  
-  public CheckNodeTreeExample() {
-    super("CheckNode TreeExample");
-    String[] strs = {"swing",     // 0
-         "platf",     // 1
-         "basic",     // 2
-         "metal",     // 3
-         "JTree"};    // 4
-                                             
-    CheckNode[] nodes = new CheckNode[strs.length];
-    for (int i=0;i<strs.length;i++) {
-      nodes[i] = new CheckNode(strs[i]); 
-    }
-    
-    
-    tree.setCellRenderer(new CheckRenderer());
-    tree.getSelectionModel().setSelectionMode(
-      TreeSelectionModel.SINGLE_TREE_SELECTION
-    );
-    tree.putClientProperty("JTree.lineStyle", "Angled");
-    tree.addMouseListener(new NodeSelectionListener(tree));
-    JScrollPane sp = new JScrollPane(tree);
-    
-    ModePanel mp = new ModePanel(nodes);
-    JTextArea textArea = new JTextArea(3,10);
-    JScrollPane textPanel = new JScrollPane(textArea);
-    JButton button = new JButton("print");
-    button.addActionListener(
-      new ButtonActionListener(nodes[0], textArea));
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(mp,     BorderLayout.CENTER);
-    panel.add(button, BorderLayout.SOUTH);
-    
-    getContentPane().add(sp,    BorderLayout.CENTER);
-    getContentPane().add(panel, BorderLayout.EAST);
-    getContentPane().add(textPanel, BorderLayout.SOUTH);
-  }
 
-  
 
 
   class ButtonActionListener implements ActionListener {
