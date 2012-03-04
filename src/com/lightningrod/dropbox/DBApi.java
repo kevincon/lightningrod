@@ -277,8 +277,8 @@ public class DBApi {
          */
         public boolean deleteLocalFile(Entry node) {
             File f = new File(getLocalPath(node.path));
-            boolean ret = f.delete();
             this.monitor.removeFile(f);
+            boolean ret = f.delete();
             return ret;
         }
 
