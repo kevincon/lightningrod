@@ -26,7 +26,7 @@ public class DBApi {
 	
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
-        final static public String ROOT_FOLDER = "home/kevin/testdb";
+        final static public String ROOT_FOLDER = "Users/bill/Downloads/testdb";
         
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
@@ -118,7 +118,7 @@ public class DBApi {
 		for (Entry e : node.contents) {
 			//TODO construct tree for Bill
 			//System.out.print("\t");
-			treeDir(e);
+			n.add(treeDir(e));
 		}
                 return n;
 	}
