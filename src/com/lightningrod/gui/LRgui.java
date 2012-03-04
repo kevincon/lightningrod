@@ -311,6 +311,40 @@ public class LRgui extends javax.swing.JFrame {
     }//GEN-LAST:event_menuExitActionPerformed
 
     private void updateFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateFilesActionPerformed
+        
+        /*
+        int row = filetreedisplay.getRowCount() - 1;
+        while (row >= 0) {
+            DBNode child = (DBNode)node.getChildAt(row);
+            row--;
+        
+        
+        if (node != null  &&  !node.isLeaf()) {
+                tree.expandRow(row);
+                for (int index = 0; row + 1 < tree.getRowCount() && index < node.getChildCount();index++){
+                    row++;
+                    DBNode child = (DBNode)node.getChildAt(index);
+                    if (child == null)
+                        break;
+                    TreePath path;
+                    while ((path = tree.getPathForRow(row)) != null  &&
+                            path.getLastPathComponent() != child)
+                        row++;
+                    if (path == null)
+                        break;
+                    row = expandNode(tree, child, row);
+                }
+            }   
+            return row;
+        }
+    
+    
+    */
+        
+        
+        
+        
+        
         Enumeration e = rootnode.breadthFirstEnumeration();
         boolean added;
         while (e.hasMoreElements()) {
@@ -327,16 +361,24 @@ public class LRgui extends javax.swing.JFrame {
             }
         }
         
+        // PRINT
+        System.out.println("Newset = "+newset);
+        
         // Update SEL and DEL hashsets
         sel.addAll(newset);
         sel.removeAll(oldset);
         del.addAll(oldset);
         del.removeAll(newset);
         
+        System.out.println("Sel = "+sel);
+        System.out.println("Del = "+del);
+        
         // Set OLD set to NEW set and clear newset
         oldset.clear();
         oldset.addAll(newset);
         newset.clear();
+        System.out.println("Oldset = "+oldset);
+        System.out.println("Newset = "+newset);
         
         // Update Previous Selection Paths Hashset
         Iterator<String> iter = oldset.iterator();
