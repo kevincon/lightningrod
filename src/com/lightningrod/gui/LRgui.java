@@ -195,44 +195,47 @@ public class LRgui extends javax.swing.JFrame {
         
         DropboxAPI.Entry entry1 = new DropboxAPI.Entry();
         entry1.path = "test1";
-        com.lightningrod.gui.DBNode e1 = new com.lightningrod.gui.DBNode(entry1);
+        com.lightningrod.gui.DBNode e1 = new com.lightningrod.gui.DBNode(entry1,true);
         
         DropboxAPI.Entry entry2 = new DropboxAPI.Entry();
-        entry2.path = "test2";
+        entry2.path = "a";
         com.lightningrod.gui.DBNode e2 = new com.lightningrod.gui.DBNode(entry2);
         
         DropboxAPI.Entry entry3 = new DropboxAPI.Entry();
         entry3.path = "test3";
         com.lightningrod.gui.DBNode e3 = new com.lightningrod.gui.DBNode(entry3);
         
+        DropboxAPI.Entry entry4 = new DropboxAPI.Entry();
+        entry4.path = "test4";
+        com.lightningrod.gui.DBNode e4 = new com.lightningrod.gui.DBNode(entry4,true);
+        
+        DropboxAPI.Entry entry5 = new DropboxAPI.Entry();
+        entry5.path = "a";
+        com.lightningrod.gui.DBNode e5 = new com.lightningrod.gui.DBNode(entry5);
+        
+        DropboxAPI.Entry entry6 = new DropboxAPI.Entry();
+        entry6.path = "best6";
+        com.lightningrod.gui.DBNode e6 = new com.lightningrod.gui.DBNode(entry6);
+        
         DropboxAPI.Entry root = new DropboxAPI.Entry();
         root.path = "testr";
-        com.lightningrod.gui.DBNode r = new com.lightningrod.gui.DBNode(root);
+        rootnode.setUserObject(root);
+        //com.lightningrod.gui.DBNode r = new com.lightningrod.gui.DBNode(root);
         
-        rootnode.add(e1);
+        rootnode.add(e6);
+        
+        e1.add(e3);
         rootnode.add(e2);
-        rootnode.add(e3);
-        e1.add(r);
+        //e1.add(e3);
+        rootnode.add(e1);
+        rootnode.add(e4);
+        //rootnode.add(e1);
+        e4.add(e5);
         
         // TEST TEST TEST END
         
         
-        /*
-        for (int i=0;i<strs.length;i++) {
-            nodes[i] = new DBNode(strs[i]); 
-        }
-        nodes[0].add(nodes[1]);
-        nodes[1].add(nodes[2]);
-        nodes[1].add(nodes[3]);
-        nodes[0].add(nodes[4]);
-        nodes[3].setSelected(true);
-        */
-        
-        
-        
-        
-        
-        
+       
         /*
          * Create and display the form
          */

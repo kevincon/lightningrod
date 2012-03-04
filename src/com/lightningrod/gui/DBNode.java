@@ -27,7 +27,7 @@ class DBNode extends DefaultMutableTreeNode {
     }
 
     public DBNode(Object dbEntry) {
-        super(dbEntry,!((DropboxAPI.Entry)dbEntry).isDir);
+        super(dbEntry,((DropboxAPI.Entry)dbEntry).isDir);
         
         DropboxAPI.Entry entry = (DropboxAPI.Entry)dbEntry;
         
@@ -93,5 +93,12 @@ class DBNode extends DefaultMutableTreeNode {
             return ((DropboxAPI.Entry)this.getUserObject()).fileName();
         }
     }
+    
+    /* NOT NEEDED!?!?!?
+    public int compare(Object o1, Object o2) {
+        return o1.toString().compareToIgnoreCase(o2.toString());
+    }
+    */
+
     // </editor-fold>
 }   // END CLASS DBnode
