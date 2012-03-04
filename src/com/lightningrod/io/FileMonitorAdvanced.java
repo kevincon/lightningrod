@@ -42,7 +42,7 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
     }
     
     @Override
-    protected void startTimer() {
+    public void startTimer() {
         super.startTimer();
         timer_ = new Timer(true);
         timer_.schedule(new FileCreationNotifier(), 0,

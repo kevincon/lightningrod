@@ -92,7 +92,7 @@ public class FileMonitor {
      *
      * @param fileListener Listener to add.
      */
-    protected void addListener(FileListener fileListener) {
+    public void addListener(FileListener fileListener) {
         // Don't add if its already there
         for (Iterator i = listeners_.iterator(); i.hasNext();) {
             WeakReference reference = (WeakReference) i.next();
