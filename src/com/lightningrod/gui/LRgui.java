@@ -378,11 +378,11 @@ public class LRgui extends javax.swing.JFrame {
             }
             else if((paths.contains(pathval) && (!sel.contains(pathval)))){
                 // Only set node as selected
-                node.setSelected(true);
+                node.setSelectedStupid();
             }else if(sel.contains(pathval)){
                 // Download and set as selected
                 dbapiobject.downloadFile(entry);
-                node.setSelected(true);
+                node.setSelectedStupid();
             }
         }
         /*
