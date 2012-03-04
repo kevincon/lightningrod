@@ -294,6 +294,7 @@ public class DBApi {
                 return null;
             File f = new File(getLocalPath(node.path));
             try {
+                this.monitor.addFile(f, node);
                 if (node.isDir) {
                     f.mkdirs();
                 } else {
@@ -303,7 +304,6 @@ public class DBApi {
 
                     mDBApi.getFile(node.path, null, out, null);
                 }
-                this.monitor.addFile(f, node);
                 return f;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
