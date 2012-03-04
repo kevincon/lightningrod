@@ -67,8 +67,8 @@ public class DBNode extends DefaultMutableTreeNode {
             // Node is a file and want to select it
             // Select all parent nodes
             DBNode x = this;
-            while(x.getParent() != null && x.getParent() != x.getRoot() && !((DBNode)x.getParent()).isSelected()){
-                ((DBNode)x.getParent()).setSelected(true);
+            while(x.getParent() != x.getRoot() && !((DBNode)x.getParent()).isSelected()){
+                ((DBNode)x.getParent()).isSelected = true;
                 x = (DBNode)(x.getParent());
             }
         }

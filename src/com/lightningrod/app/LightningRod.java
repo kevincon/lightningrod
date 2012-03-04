@@ -28,7 +28,7 @@ public class LightningRod {
             
                 //backup Dropbox folder if it exists
                 if (new File(root_path).exists()) {
-                    String new_dir_base = DBApi.ROOT_FOLDER + "_backup";
+                    String new_dir_base = root_path + "_backup";
                     String new_dir = new_dir_base;
                     int counter = 0;
                     while(!Backup.backupFolder(root_path, new_dir)) {
