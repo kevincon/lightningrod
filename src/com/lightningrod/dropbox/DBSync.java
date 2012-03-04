@@ -6,6 +6,7 @@ package com.lightningrod.dropbox;
 
 import com.dropbox.client2.DropboxAPI.Entry;
 import com.lightningrod.io.FileMonitorAdvanced;
+import com.lightningrod.dropbox.DBApi;
 import java.io.File;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
@@ -18,11 +19,13 @@ public class DBSync {
     private final FileMonitorAdvanced fileMonitor_;
     private final long queuePollingInterval_;
     private Timer timer_;
+    private DBApi db;
 
     public DBSync(FileMonitorAdvanced fileMonitor,
-                  long queuePollingInterval) {
+                  long queuePollingInterval, DBApi db) {
         fileMonitor_ = fileMonitor;
         queuePollingInterval_ = queuePollingInterval;
+        this.db = db;
     }
     
      public void startTimer() {
@@ -46,7 +49,7 @@ public class DBSync {
                     File fileAdded = (File)itrAdded.next();
                     System.out.println("Adding file to dropbox: "
                                         + fileAdded.toString());
-                    // TODO(kevincon): Add fileAdded to dropbox.
+                    db.addFile(fileAdded);
                     itrAdded.remove();
                 }
             } catch (ConcurrentModificationException e) {
@@ -61,7 +64,7 @@ public class DBSync {
                     Entry entryRemoved = (Entry)itrRemoved.next();
                     System.out.println("Removing file from dropbox: "
                                         + entryRemoved.toString());
-                    // TODO(kevincon): Remove entryRemoved from dropbox.
+                    db.deleteFile(entryRemoved);
                     itrRemoved.remove();
                 }
             } catch (ConcurrentModificationException e) {
@@ -77,7 +80,7 @@ public class DBSync {
                             (SimpleEntry<Entry, File>)itrUpdated.next();
                     System.out.println("Updating file in dropbox: "
                                         + fileUpdated.toString());
-                    // TODO(kevincon): Update fileUpdated in dropbox.
+                    db.updateFile(fileUpdated);
                     itrUpdated.remove();
                 }
             } catch (ConcurrentModificationException e) {
