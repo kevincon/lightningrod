@@ -13,7 +13,8 @@ import java.util.*;
 // http://geosoft.no/software/filemonitor/FileMonitor.java.html
 
 public class FileMonitorAdvanced extends FileMonitor implements FileListener {
-    BiMap<File, DropboxAPI.Entry> filesToMonitor_;
+    private Map<File, DropboxAPI.Entry> filesToMonitor_;
+    private long fileCreationPollingInterval_;
     private final File localDropboxRootDirectory_;
     private Timer timer_;
     private Set<File> filesAdded_;
@@ -31,15 +32,25 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
                                File localDropboxRootDirectory) {
         super(fileChangePollingInterval);
         localDropboxRootDirectory_ = localDropboxRootDirectory;
+        fileCreationPollingInterval_ = fileCreationPollingInterval;
         
-        filesToMonitor_ = HashBiMap.create();
-        
+        filesToMonitor_ = new HashMap<File, DropboxAPI.Entry>();
         filesAdded_ = new LinkedHashSet<File>();
         filesRemoved_ = new LinkedHashSet<DropboxAPI.Entry>();
-        
+    }
+    
+    @Override
+    protected void startTimer() {
+        super.startTimer();
         timer_ = new Timer(true);
         timer_.schedule(new FileCreationNotifier(), 0,
-                        fileCreationPollingInterval);
+                        fileCreationPollingInterval_);
+    }
+    
+    @Override
+    protected void stopTimer() {
+        super.stopTimer();
+        timer_.cancel();
     }
     
     /**
@@ -48,7 +59,8 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
      * @param entry Entry in Dropbox that corresponds to file.
      * @param file Local file to monitor for changes and deletion.
      */
-    public void addFileToMonitor (File file, DropboxAPI.Entry entry) {
+    public void addFile (File file, DropboxAPI.Entry entry) {
+        System.out.println("Adding monitoring for file: " + file);
         filesToMonitor_.put(file, entry);
         super.addFile(file);
     }
@@ -60,6 +72,7 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
      */
     @Override
     public void removeFile(File file) {
+        System.out.println("Removing monitoring for file: " + file);
         filesToMonitor_.remove(file);
         super.removeFile(file);
     }
@@ -96,6 +109,7 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
             Set<File> filesThatExist = getAllFiles(localDropboxRootDirectory_);
             filesThatExist.removeAll(filesBeingMonitored);
             
+            System.out.println("Files added: " + filesThatExist.toString());
             filesAdded_.addAll(filesThatExist);
         }
     }
@@ -118,7 +132,13 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
         if(isDeleted) {
             System.out.println("File deleted: " + file.getAbsolutePath());
             
+            // Stop checking for updates to this file.
+            this.removeFile(file);
+            // Make sure that if this file was added and then removed that
+            // we don't overlap.
             filesAdded_.remove(file);
+            // Add this entry to the list that should be synced with dropbox
+            // by removing them.
             filesRemoved_.add(entry);
             if (hasDropboxEntry) {
                 System.out.println("=> Corresponding Dropbox path: " + entry.path);
