@@ -1,11 +1,13 @@
 package com.lightningrod.io;
 
+import com.lightningrod.dropbox.DBSync;
 import java.io.File;
 
 public class FileMonitorAdvancedTest {
     public static void main (String args[]) {
         FileMonitorAdvanced monitor = new FileMonitorAdvanced (3000L, 5000L,
             new File("/home/monk/test_dropbox"));
+        DBSync sync = new DBSync(monitor, 3000L);
 
         monitor.addFile (new File ("/home/monk/test_dropbox/test1"), null);
         monitor.addFile (new File ("/home/monk/test_dropbox/test2"), null);
@@ -13,6 +15,7 @@ public class FileMonitorAdvancedTest {
 
         monitor.addListener (monitor);
         monitor.startTimer();
+        sync.startTimer();
 
         while (true) ;
         //monitor.stopTimer();
