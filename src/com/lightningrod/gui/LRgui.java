@@ -350,14 +350,7 @@ public class LRgui extends javax.swing.JFrame {
         while (e.hasMoreElements()) {
             DBNode node = (DBNode) e.nextElement();
             if (node.isSelected()) {
-                TreeNode[] nodes = node.getPath();
-                // Add to new set
-                int size = nodes.length;
-                for(int i = 0;i<size;i++){
-                    if(((DBNode)nodes[i]).isSelected()){
-                        added = newset.add(((DropboxAPI.Entry)(((DBNode)nodes[i]).getUserObject())).path);
-                    }
-                }
+                newset.add(((DropboxAPI.Entry)(node.getUserObject())).path);
             }
         }
         

@@ -92,7 +92,7 @@
                           <Component id="syncstatusBar" min="-2" pref="186" max="-2" attributes="0"/>
                           <Component id="dbspaceBar" alignment="0" min="-2" pref="186" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="19" max="32767" attributes="0"/>
+                      <EmptySpace pref="24" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -187,9 +187,6 @@
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[146, 40]"/>
         </Property>
-        <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[146, 40]"/>
-        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="syncStatus">
@@ -208,9 +205,6 @@
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[146, 40]"/>
         </Property>
-        <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[146, 40]"/>
-        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="usbStatus">
@@ -227,9 +221,6 @@
           <Dimension value="[10, 40]"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[146, 40]"/>
-        </Property>
-        <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[146, 40]"/>
         </Property>
       </Properties>
