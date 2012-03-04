@@ -201,6 +201,9 @@ public class DBApi {
             if (e == null || f == null)
                 return false;
             
+            if (f.isDirectory())
+                return false;
+            
             try {
                 InputStream in = new FileInputStream(f);
                 mDBApi.putFile(e.path, in, f.length(), e.rev, null);
