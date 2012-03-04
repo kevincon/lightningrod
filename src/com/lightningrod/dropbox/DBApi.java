@@ -10,12 +10,17 @@ import com.dropbox.client2.session.WebAuthSession.WebAuthInfo;
 import com.lightningrod.app.BareBonesBrowserLaunch;
 import com.lightningrod.io.FileMonitorAdvanced;
 import com.lightningrod.gui.DBNode;
+import com.lightningrod.gui.LRgui;
 import java.io.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  * Convenience class for Dropbox methods.
@@ -27,7 +32,7 @@ public class DBApi {
 	
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
-        final static public String ROOT_FOLDER = "home/monk/testdb";
+        final static public String ROOT_FOLDER = "Users/bill/Downloads/testdb";
         
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
@@ -62,11 +67,17 @@ public class DBApi {
 			return false;
 		} else {
 			//TODO stop here so user can confirm app approval 
-			Scanner readUserInput=new Scanner(System.in); 
+			/*
+                        Scanner readUserInput=new Scanner(System.in); 
 			System.out.println("Press enter after "
                                 + "approving Lightning Rod.");
 			readUserInput.nextLine(); 
-			
+			*/
+                    
+                    LRgui.display_dialog("Please Approve LightningRod");
+                    
+                    
+                    
 			return authenticate();
 		}
 	}
@@ -158,30 +169,32 @@ public class DBApi {
         
         // Returns the Dropbox free space in Megabytes, or -1 if it was not
         // retrievable.
-        public long getDropboxFreeSpace() {
-            long freeSpace = -1L;
+        public int getDropboxFreeSpace() {
+            int percentInUse = 0;
             try {
-                freeSpace = mDBApi.accountInfo().quota -
-                                (mDBApi.accountInfo().quotaNormal +
-                                 mDBApi.accountInfo().quotaShared);
+                percentInUse = (int) ((mDBApi.accountInfo().quotaNormal +
+                                    mDBApi.accountInfo().quotaShared) / 
+                                   ((double)mDBApi.accountInfo().quota) * 100.0);
             } catch (DropboxException e) {
                 System.out.println("Unable to retrieve Dropbox free space. "
                         + "Error: " + e.toString());
             }
-            return freeSpace;
+            return percentInUse;
         }
         
         // Returns the root drive free space in Megabytes, or -1 if it was not
         // retrievable.
-        public long getRootFreeSpace() {
-            long freeSpace = -1L;
+        public int getRootFreeSpace() {
+            int percentInUse = 0;
             try {
-                freeSpace = (new File(root_drive)).getFreeSpace();
+                File r = new File(root_drive);
+                percentInUse = (int) (((r.getTotalSpace() - r.getFreeSpace()) /
+                               (double)r.getTotalSpace()) * 100.0);
             } catch (SecurityException e) {
                 System.out.println("Unable to retrieve root drive free space. "
                         + "Error: " + e.toString());
             }
-            return freeSpace;
+            return percentInUse;
         }
 
         //

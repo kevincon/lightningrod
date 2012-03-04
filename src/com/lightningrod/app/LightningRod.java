@@ -52,14 +52,16 @@ public class LightningRod {
                 //create Dropbox sync monitoring object
                 DBSync sync = new DBSync(monitor, 3000L, db);
                 
+                // Initialize GUI and Populate File Architecture
+                LRgui.setupGUI(db);
+                
 		//login
 		if (!db.login()) {
                     //login failed
                     return;
 		} else {
                     
-                    // Initialize GUI and Populate File Architecture
-                    LRgui.setupGUI(db);
+                    LRgui.initializeTree();
 
                     //start file monitoring timer
                     monitor.addListener(monitor);

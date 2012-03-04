@@ -121,11 +121,44 @@ public class LRgui extends javax.swing.JFrame {
         }
     }
     
+    public static void display_dialog(String input){
+        JTextArea textArea = new JTextArea(3,10);
+        JScrollPane textPanel = new JScrollPane(textArea);
+        JButton button = new JButton("print");
+        JOptionPane.showMessageDialog(null,
+            input,
+            "Lightning Rod",
+            JOptionPane.INFORMATION_MESSAGE);
+        
+    }
+    
+    
+    
+    public static void initializeTree(){
+        //download entire Dropbox folder, add file monitors
+        rootnode = dbapiobject.treeDir(dbapiobject.getRoot());
+        
+        // Set Root Node as Selected
+        rootnode.setRootSelected();
+        
+        DefaultTreeModel treemodel = new DefaultTreeModel(rootnode);
+        filetreedisplay.setModel(treemodel);
+        filetreedisplay.revalidate();
+        filetreedisplay.repaint();
+    }
+    
+    
     /**
      * Creates new gui
      */
     public LRgui() {
         initComponents();
+        
+        
+        
+        syncstatusBar.setValue(0);
+        usbspaceBar.setValue(dbapiobject.getRootFreeSpace());
+        dbspaceBar.setValue(dbapiobject.getDropboxFreeSpace());
         
         /******* NEW CODE ********/
         // Set Root Node as invisible
@@ -134,13 +167,7 @@ public class LRgui extends javax.swing.JFrame {
         filetreedisplay.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         filetreedisplay.putClientProperty("JTree.lineStyle", "Angled");
         filetreedisplay.addMouseListener(new DBNodeMouseListener(filetreedisplay));
-        JTextArea textArea = new JTextArea(3,10);
-        JScrollPane textPanel = new JScrollPane(textArea);
-        JButton button = new JButton("print");
-        JOptionPane.showMessageDialog(this,
-            "Text Message",
-            "MessageBox Title",
-            JOptionPane.INFORMATION_MESSAGE);
+        
         
         /** END NEW CODE **/
     }
@@ -175,7 +202,8 @@ public class LRgui extends javax.swing.JFrame {
 
         filedisplayPane.setViewportView(filetreedisplay);
 
-        updateFiles.setText("Update File List");
+        updateFiles.setBackground(new java.awt.Color(0, 204, 0));
+        updateFiles.setText("SYNC!");
         updateFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateFilesActionPerformed(evt);
@@ -202,6 +230,7 @@ public class LRgui extends javax.swing.JFrame {
 
         syncStatus.setText("Sync/Update Status");
 
+        usbspaceBar.setBackground(new java.awt.Color(0, 0, 255));
         usbspaceBar.setMaximumSize(new java.awt.Dimension(32767, 40));
         usbspaceBar.setMinimumSize(new java.awt.Dimension(10, 40));
         usbspaceBar.setPreferredSize(new java.awt.Dimension(146, 40));
@@ -239,71 +268,74 @@ public class LRgui extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(filedisplayPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 443, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(layout.createSequentialGroup()
-                        .add(41, 41, 41)
-                        .add(selectAll)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(deselectAll)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(updateFiles)))
-                .add(18, 18, 18)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                        .add(0, 0, Short.MAX_VALUE)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(infoText)
-                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                                    .add(syncStatus)
-                                    .add(48, 48, 48))
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                                    .add(usbStatus)
-                                    .add(70, 70, 70))
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                                    .add(dbStatus)
-                                    .add(69, 69, 69)))))
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                        .add(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .add(filedisplayPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 443, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(layout.createSequentialGroup()
+                            .add(41, 41, 41)
+                            .add(selectAll)
+                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                            .add(deselectAll)
+                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(updateFiles, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 117, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                     .add(layout.createSequentialGroup()
+                        .add(28, 28, 28)
+                        .add(syncStatus)
+                        .add(18, 18, 18)
+                        .add(syncstatusBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(layout.createSequentialGroup()
+                        .add(0, 43, Short.MAX_VALUE)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(dbStatus)
+                            .add(infoText))
+                        .add(53, 53, 53))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(usbspaceBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(syncstatusBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(dbspaceBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(24, Short.MAX_VALUE))))
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(usbspaceBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(layout.createSequentialGroup()
+                                    .add(dbspaceBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                    .add(15, 15, 15)))
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                                .add(usbStatus)
+                                .add(76, 76, 76))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .add(12, 12, 12)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
-                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(syncstatusBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-                        .add(19, 19, 19)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(selectAll)
                             .add(deselectAll)
-                            .add(updateFiles))))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(layout.createSequentialGroup()
+                            .add(updateFiles, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 42, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(13, 13, 13)
                         .add(filedisplayPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 381, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(35, Short.MAX_VALUE))
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(layout.createSequentialGroup()
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(syncstatusBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(0, 8, Short.MAX_VALUE))
+                            .add(layout.createSequentialGroup()
+                                .add(17, 17, 17)
+                                .add(syncStatus)
+                                .add(0, 0, Short.MAX_VALUE))))
                     .add(layout.createSequentialGroup()
-                        .add(syncStatus)
-                        .add(38, 38, 38)
                         .add(usbspaceBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(18, 18, 18)
                         .add(usbStatus)
-                        .add(27, 27, 27)
+                        .add(68, 68, 68)
                         .add(dbspaceBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                         .add(dbStatus)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .add(infoText)
-                        .add(62, 62, 62))))
+                        .add(113, 113, 113))))
         );
 
         pack();
@@ -430,9 +462,10 @@ public class LRgui extends javax.swing.JFrame {
     private static void resetBars(){
         // Zero progress bars
         //syncstatusBar.setValue(syncstatusBar.getMinimum());
-        syncstatusBar.setStringPainted(true);
+        //syncstatusBar.setStringPainted(true);
+        //syncstatusBar
         //usbspaceBar.setValue(usbspaceBar.getMinimum());
-        usbspaceBar.setStringPainted(true);
+        //usbspaceBar.setStringPainted(true);
         //dbspaceBar.setValue(dbspaceBar.getMinimum());
         dbspaceBar.setStringPainted(true);
     }
@@ -440,8 +473,7 @@ public class LRgui extends javax.swing.JFrame {
     public static void setupGUI(DBApi db){
         // <editor-fold>
         
-        //download entire Dropbox folder, add file monitors
-        rootnode = db.treeDir(db.getRoot());
+        
         
         oldset.clear();
         newset.clear();
@@ -481,8 +513,7 @@ public class LRgui extends javax.swing.JFrame {
         }
         //</editor-fold>
         
-        // Set Root Node as Selected
-        rootnode.setRootSelected();
+        
         
         /*
          * Create and display the form
@@ -494,7 +525,7 @@ public class LRgui extends javax.swing.JFrame {
             }
         });
         // Reset statusbars
-        resetBars();
+        //resetBars();
     }// </editor-fold>
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -502,7 +533,7 @@ public class LRgui extends javax.swing.JFrame {
     private static javax.swing.JProgressBar dbspaceBar;
     private javax.swing.JButton deselectAll;
     private javax.swing.JScrollPane filedisplayPane;
-    private javax.swing.JTree filetreedisplay;
+    private static javax.swing.JTree filetreedisplay;
     private javax.swing.JLabel infoText;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
