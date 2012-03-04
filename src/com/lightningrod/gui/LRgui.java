@@ -21,6 +21,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import com.lightningrod.dropbox.DBApi;
+import java.util.Iterator;
+import javax.swing.tree.*;
 //import javax.swing.tree.TreeSelectionModel;
 
 /**
@@ -28,10 +30,20 @@ import com.lightningrod.dropbox.DBApi;
  * @author bill
  */
 public class LRgui extends javax.swing.JFrame {
+    // Old Set
+    static HashSet <DropboxAPI.Entry>oldset = new HashSet <DropboxAPI.Entry>();
+    // New Set
+    static HashSet <DropboxAPI.Entry>newset = new HashSet <DropboxAPI.Entry>();
+    
     // Selection Set
-    static HashSet <DropboxAPI.Entry>s1 = new HashSet <DropboxAPI.Entry>();
+    static HashSet <DropboxAPI.Entry>sel = new HashSet <DropboxAPI.Entry>();
     // Deletion Set
-    static HashSet <DropboxAPI.Entry>s2 = new HashSet <DropboxAPI.Entry>();
+    static HashSet <DropboxAPI.Entry>del = new HashSet <DropboxAPI.Entry>();
+    
+    // String HashSet
+    static HashSet <String>paths = new HashSet <String>();
+    
+    static DBApi dbapiobject;
     
     //static JTree filetree = new JTree((TreeNode)null);
     static DBNode rootnode;// = com.lightningrod.dropbox.DBApi.treeDir(null);
@@ -96,27 +108,15 @@ public class LRgui extends javax.swing.JFrame {
             return row;
         }
     
-    public int collapseNode (JTree tree,DBNode node, int row){
-            if (node != null  &&  !node.isLeaf()) {
-                tree.collapseRow(row);
-                for (int index = 0; row + 1 < tree.getRowCount() && index < node.getChildCount();index++){
-                    row++;
-                    DBNode child = (DBNode)node.getChildAt(index);
-                    if (child == null)
-                        break;
-                    TreePath path;
-                    while ((path = tree.getPathForRow(row)) != null  &&
-                            path.getLastPathComponent() != child)
-                        row++;
-                    if (path == null)
-                        break;
-                    row = collapseNode(tree, child, row);
-                }
-            }   
-            return row;
-        }
     
-
+    public void collapseNodes() {
+        int row = filetreedisplay.getRowCount() - 1;
+        while (row >= 0) {
+            filetreedisplay.collapseRow(row);
+            row--;
+        }
+    }
+    
     /**
      * Creates new gui
      */
@@ -310,7 +310,61 @@ public class LRgui extends javax.swing.JFrame {
     }//GEN-LAST:event_menuExitActionPerformed
 
     private void updateFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateFilesActionPerformed
-        // TODO add your handling code here:
+        Enumeration e = rootnode.breadthFirstEnumeration();
+        boolean added;
+        while (e.hasMoreElements()) {
+            DBNode node = (DBNode) e.nextElement();
+            if (node.isSelected()) {
+                TreeNode[] nodes = node.getPath();
+                // Add to new set
+                int size = nodes.length;
+                for(int i = 0;i<size;i++){
+                    if(((DBNode)nodes[i]).isSelected()){
+                        added = newset.add((DropboxAPI.Entry)(((DBNode)nodes[i]).getUserObject()));
+                    }
+                }
+            }
+        }
+        
+        // Update SEL and DEL hashsets
+        sel.addAll(newset);
+        sel.removeAll(oldset);
+        del.addAll(oldset);
+        del.removeAll(newset);
+        
+        // Set OLD set to NEW set and clear newset
+        oldset.clear();
+        oldset.addAll(newset);
+        newset.clear();
+        
+        // Update Previous Selection Paths Hashset
+        Iterator<DropboxAPI.Entry> iter = oldset.iterator();
+        while(iter.hasNext()){
+            paths.add(iter.next().path);
+        }
+        
+        // Update DBApi Hashset
+        paths.addAll(dbapiobject.pathnames);
+        // Clear DBApi Paths HashSet
+        dbapiobject.pathnames.clear();
+        
+        // Update Tree and Add Selections
+        rootnode = dbapiobject.treeDir(dbapiobject.getRoot());
+        
+        // Iterate through tree and check if pathname is in Hashset
+        e = rootnode.breadthFirstEnumeration();
+        while (e.hasMoreElements()) {
+            DBNode node = (DBNode) e.nextElement();
+            TreeNode[] nodes = node.getPath();
+            int size = nodes.length;
+            for(int i = 0;i<size;i++){
+                // Check pathname
+                if(paths.contains((((DropboxAPI.Entry)(((DBNode)nodes[i])).getUserObject())).path)){
+                    // Set node as selected
+                    ((DBNode)nodes[i]).setSelected(true);
+                }
+            }   
+        }
     }//GEN-LAST:event_updateFilesActionPerformed
 
     private void selectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllActionPerformed
@@ -340,7 +394,7 @@ public class LRgui extends javax.swing.JFrame {
             }
         }
         // Contract Tree
-        int dummy = collapseNode(filetreedisplay,rootnode,-1);
+        collapseNodes();//(filetreedisplay,rootnode,0);
         
         ((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
         filetreedisplay.revalidate();
@@ -353,6 +407,8 @@ public class LRgui extends javax.swing.JFrame {
         
         //download entire Dropbox folder, add file monitors
         rootnode = db.treeDir(db.getRoot());
+        
+        dbapiobject = db;
         
         /*
          * Set the Nimbus look and feel
@@ -414,36 +470,3 @@ public class LRgui extends javax.swing.JFrame {
     private javax.swing.JProgressBar usbspaceBar;
     // End of variables declaration//GEN-END:variables
 }
-
-/*
-
-
-
-
-  class ButtonActionListener implements ActionListener {
-    CheckNode root;
-
-    JTextArea textArea;
-
-    ButtonActionListener(final CheckNode root, final JTextArea textArea) {
-      this.root = root;
-      this.textArea = textArea;
-    }
-
-    public void actionPerformed(ActionEvent ev) {
-      Enumeration e = root.breadthFirstEnumeration();
-      while (e.hasMoreElements()) {
-        CheckNode node = (CheckNode) e.nextElement();
-        if (node.isSelected()) {
-          TreeNode[] nodes = node.getPath();
-          textArea.append("\n" + nodes[0].toString());
-          for (int i = 1; i < nodes.length; i++) {
-            textArea.append("/" + nodes[i].toString());
-          }
-        }
-      }
-    }
-  }
-
-  
- */

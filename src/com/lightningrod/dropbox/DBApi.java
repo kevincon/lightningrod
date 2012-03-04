@@ -12,6 +12,7 @@ import com.lightningrod.io.FileMonitorAdvanced;
 import com.lightningrod.gui.DBNode;
 import java.io.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,8 @@ public class DBApi {
 	private Entry root;
         private String root_drive;
         private FileMonitorAdvanced monitor;
+        
+        public HashSet <String>pathnames;
 	
         /**
          * 
@@ -201,6 +204,7 @@ public class DBApi {
                 try {
                     Entry ret = mDBApi.createFolder(path);
                     this.monitor.addFile(f, ret);
+                    pathnames.add(ret.path);
                     return ret;
                 } catch (DropboxException ex) {
                     Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
@@ -211,6 +215,7 @@ public class DBApi {
                     InputStream in = new FileInputStream(f);
                     Entry ret = mDBApi.putFile(path, in, f.length(), null, null);
                     this.monitor.addFile(f, ret);
+                    pathnames.add(ret.path);
                     return ret;
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
