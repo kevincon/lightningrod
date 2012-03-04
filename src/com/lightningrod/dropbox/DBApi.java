@@ -1,15 +1,16 @@
 package com.lightningrod.dropbox;
 
-import java.util.Scanner;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.DropboxAPI.Entry;
 import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AppKeyPair;
-import com.dropbox.client2.session.WebAuthSession;
 import com.dropbox.client2.session.Session.AccessType;
+import com.dropbox.client2.session.WebAuthSession;
 import com.dropbox.client2.session.WebAuthSession.WebAuthInfo;
 import com.lightningrod.app.BareBonesBrowserLaunch;
 import java.io.*;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,7 +40,7 @@ public class DBApi {
                 this.root_drive = String.valueOf(pwd.getAbsolutePath().charAt(0));
                 if (!(this.root_drive.equals("/")))
                     this.root_drive = this.root_drive + ":" + File.separator;
-                System.out.println("test:\t" + getLocalPath("testfile.txt"));
+                System.out.println("test:\t" + this.getLocalPath("testfile.txt"));
 	}
 	
 	public boolean login() {
@@ -67,10 +68,9 @@ public class DBApi {
 			BareBonesBrowserLaunch.openURL(this.auth.url);
 			
 			return true;
-		} catch (DropboxException e) {
+		} catch (DropboxException ex) {
 			// TODO Auto-generated catch block
-			System.out.println("error after trying to get user to approve app");
-			e.printStackTrace();
+			Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
 		}
 		
@@ -80,10 +80,9 @@ public class DBApi {
 		try {
 			session.retrieveWebAccessToken(auth.requestTokenPair);
 			return true;
-		} catch (DropboxException e) {
+		} catch (DropboxException ex) {
 			// TODO Auto-generated catch block
-			System.out.println("error after trying to authenticate user");
-			e.printStackTrace();
+                        Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
 		}	
 	}
@@ -116,9 +115,8 @@ public class DBApi {
 		}
 		try {
 			return mDBApi.metadata(path, 0, null, true, null);
-		} catch (DropboxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (DropboxException ex) {
+			Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
 			return null;
 		}
 	}
@@ -153,9 +151,26 @@ public class DBApi {
     
         //update local file on Dropbox
         //return true if successful, false otherwise
-        //public boolean updateFile(Set<SimpleEntry, File>) {
+        public boolean updateFile(SimpleEntry<Entry, File> se) {
+            Entry e = se.getKey();
+            File f = se.getValue();
             
-        //}
+            if (e == null || f == null)
+                return false;
+            
+            try {
+                InputStream in = new FileInputStream(f);
+                mDBApi.putFile(e.path, in, f.length(), e.rev, null);
+                return true;
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } catch (DropboxException ex) {
+                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        }
+            
         
         //delete file from Dropbox
         //returns true if successful, false otherwise
@@ -203,7 +218,7 @@ public class DBApi {
         }
         
         //Add on "ROOT_FOLDER/path" to root_drive
-        public String getLocalPath(String path) {
+        private String getLocalPath(String path) {
             return root_drive + ROOT_FOLDER + File.separator + path;
         }
         

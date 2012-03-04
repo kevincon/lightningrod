@@ -15,6 +15,6 @@ public class FileMonitorAdvancedTest {
         monitor.startTimer();
 
         while (true) ;
-        monitor.stopTimer();
+        //monitor.stopTimer();
     }
 }
