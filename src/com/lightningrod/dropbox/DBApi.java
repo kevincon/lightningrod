@@ -9,10 +9,7 @@ import com.dropbox.client2.session.WebAuthSession;
 import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.WebAuthSession.WebAuthInfo;
 import com.lightningrod.app.BareBonesBrowserLaunch;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,12 +88,14 @@ public class DBApi {
 		}	
 	}
 	
+        //construct the tree, using pre-order recursive traversal
 	public void treeDir(Entry node) {
 		if (node == null)
 			node = updateTree(node);
 		else if (node.isDir)
 			node = updateTree(node);
 		System.out.println(node.fileName());
+                //downloadFile(node);
 		if(node.contents == null)
 			return;
 		for (Entry e : node.contents) {
@@ -106,6 +105,7 @@ public class DBApi {
 		}
 	}
 	
+        //update tree from node's perspective (just one level of children)
 	public Entry updateTree(Entry node) {
 		String path;
 		if (node == null) {
@@ -126,31 +126,44 @@ public class DBApi {
 	public Entry getRoot() {
 		return (this.root = updateTree(root));
 	}
-/*
+
         //add file to Dropbox
-        public addFile() {
+        public addFile(Entry node) {
             
         }
-        
+    
+        /*
         //delete file from Dropbox
         public deleteFile() {
             
         }
         */
         
+        //download file described by node
+        //does not take into account whether file already exists or not
+        //that's up to us to decide whether or not it matters
         public File downloadFile(Entry node) {
             if (node == null)
                 return null;
             File f = new File(getLocalPath(node.path));
             try {
-                OutputStream out = new FileOutputStream(f);
+                if (node.isDir) {
+                    f.mkdirs();
+                } else {
+                    f.getParentFile().mkdirs();
+                    f.createNewFile();
+                    OutputStream out = new FileOutputStream(f);
+
+                    mDBApi.getFile(node.path, null, out, null);
+                }
+                return f;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                f.delete();
                 return null;
-            }
-            try {
-                mDBApi.getFile(node.path, null, null, null);
-                return f;
+            } catch (IOException ex) {
+                Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             } catch (DropboxException ex) {
                 Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
@@ -162,6 +175,7 @@ public class DBApi {
             return root_drive + ROOT_FOLDER + File.separator + path;
         }
         
+        //disconnect API, remove user session
 	public void disconnect() {
 		session.unlink();
 	}
