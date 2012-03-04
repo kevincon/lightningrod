@@ -8,6 +8,7 @@ import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.WebAuthSession;
 import com.dropbox.client2.session.WebAuthSession.WebAuthInfo;
 import com.lightningrod.app.BareBonesBrowserLaunch;
+import com.lightningrod.io.FileMonitorAdvanced;
 import java.io.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Scanner;
@@ -33,17 +34,19 @@ public class DBApi {
 	
 	private Entry root;
         private String root_drive;
+        private FileMonitorAdvanced monitor;
 	
         /**
          * 
          */
-        public DBApi(String rd) {
+        public DBApi(String rd, FileMonitorAdvanced monitor) {
 		//create dropbox api and session objects based on app key/secret
 		this.appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
 		this.session = new WebAuthSession(appKeys, ACCESS_TYPE);
 		this.mDBApi = new DropboxAPI<WebAuthSession>(session);
                 
                 this.root_drive = rd;
+                this.monitor = monitor;
 	}
 	
         /**
@@ -102,7 +105,10 @@ public class DBApi {
 		else if (node.isDir)
 			node = updateTree(node);
 		System.out.println(node.fileName());
-                //downloadFile(node);
+                File ret = downloadFile(node);
+                if (ret != null) {
+                    this.monitor.addFile(ret, node);
+                }
 		if(node.contents == null)
 			return;
 		for (Entry e : node.contents) {
