@@ -70,6 +70,8 @@ public class LRgui extends javax.swing.JFrame {
                 boolean isSelected = !(node.isSelected());
                 node.setSelected(isSelected);
                 
+                System.out.println("CLICKED: " + node.toString() + " " + isSelected);
+                
                 // Check if node is directory
                 if(node.childrenAllowed()){
                     // If selected expand, otherwise contract
@@ -82,7 +84,7 @@ public class LRgui extends javax.swing.JFrame {
                     }
                 }
                                     
-                ((DefaultTreeModel) mousetree.getModel()).nodeChanged(node);
+                ((DefaultTreeModel) mousetree.getModel()).nodeChanged(rootnode);
                 mousetree.revalidate();
                 mousetree.repaint();
             }
@@ -134,6 +136,7 @@ public class LRgui extends javax.swing.JFrame {
         JTextArea textArea = new JTextArea(3,10);
         JScrollPane textPanel = new JScrollPane(textArea);
         JButton button = new JButton("print");
+        
         
         /** END NEW CODE **/
     }
@@ -349,6 +352,7 @@ public class LRgui extends javax.swing.JFrame {
         boolean added;
         while (e.hasMoreElements()) {
             DBNode node = (DBNode) e.nextElement();
+            System.out.println("HERE: " + node.toString() + " " + node.isSelected);
             if (node.isSelected() && !node.isRoot()) {
                 newset.add(((DropboxAPI.Entry)(node.getUserObject())).path);
             }
@@ -386,6 +390,12 @@ public class LRgui extends javax.swing.JFrame {
         
         // Update Tree and Add Selections
         rootnode = dbapiobject.treeDir(dbapiobject.getRoot());
+        DefaultTreeModel treemodel = new DefaultTreeModel(rootnode);
+        filetreedisplay.setModel(treemodel);
+        //((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
+        
+        // Set Root Node as Selected
+        rootnode.setRootSelected();
         
         // Iterate through tree and check if pathname is in Hashset
         e = rootnode.breadthFirstEnumeration();
