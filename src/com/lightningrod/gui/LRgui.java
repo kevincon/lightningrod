@@ -294,7 +294,7 @@ public class LRgui extends javax.swing.JFrame {
     }//GEN-LAST:event_updateFilesActionPerformed
 
     private void selectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllActionPerformed
-        // TODO add your handling code here:
+        // Select ALL nodes
         if(rootnode.children() != null){
             Enumeration e = rootnode.children();
             while (e.hasMoreElements()) {
@@ -311,7 +311,20 @@ public class LRgui extends javax.swing.JFrame {
     }//GEN-LAST:event_selectAllActionPerformed
 
     private void deselectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deselectAllActionPerformed
-        // TODO add your handling code here:
+        // Deelect ALL nodes
+        if(rootnode.children() != null){
+            Enumeration e = rootnode.children();
+            while (e.hasMoreElements()) {
+                DBNode node = (DBNode) e.nextElement();
+                node.setSelected(false);
+            }
+        }
+        // Contract Tree
+        int dummy = expandNode(filetreedisplay,rootnode,-1);
+        
+        ((DefaultTreeModel) filetreedisplay.getModel()).nodeChanged(rootnode);
+        filetreedisplay.revalidate();
+        filetreedisplay.repaint();
     }//GEN-LAST:event_deselectAllActionPerformed
 
     /**
