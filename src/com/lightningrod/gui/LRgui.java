@@ -314,52 +314,18 @@ public class LRgui extends javax.swing.JFrame {
     }//GEN-LAST:event_menuExitActionPerformed
 
     private void updateFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateFilesActionPerformed
-        
-        /*
-        int row = filetreedisplay.getRowCount() - 1;
-        while (row >= 0) {
-            DBNode child = (DBNode)node.getChildAt(row);
-            row--;
-        
-        
-        if (node != null  &&  !node.isLeaf()) {
-                tree.expandRow(row);
-                for (int index = 0; row + 1 < tree.getRowCount() && index < node.getChildCount();index++){
-                    row++;
-                    DBNode child = (DBNode)node.getChildAt(index);
-                    if (child == null)
-                        break;
-                    TreePath path;
-                    while ((path = tree.getPathForRow(row)) != null  &&
-                            path.getLastPathComponent() != child)
-                        row++;
-                    if (path == null)
-                        break;
-                    row = expandNode(tree, child, row);
-                }
-            }   
-            return row;
-        }
-    
-    
-    */
-        
-        
-        
-        
-        
         Enumeration e = rootnode.breadthFirstEnumeration();
         boolean added;
         while (e.hasMoreElements()) {
             DBNode node = (DBNode) e.nextElement();
-            System.out.println("HERE: " + node.toString() + " " + node.isSelected);
+            //System.out.println("HERE: " + node.toString() + " " + node.isSelected);
             if (node.isSelected() && !node.isRoot()) {
                 newset.add(((DropboxAPI.Entry)(node.getUserObject())).path);
             }
         }
         
         // PRINT
-        System.out.println("Newset = "+newset);
+        //System.out.println("Newset = "+newset);
         
         // Update SEL and DEL hashsets
         sel.addAll(newset);
@@ -374,8 +340,8 @@ public class LRgui extends javax.swing.JFrame {
         oldset.clear();
         oldset.addAll(newset);
         newset.clear();
-        System.out.println("Oldset = "+oldset);
-        System.out.println("Newset = "+newset);
+        //System.out.println("Oldset = "+oldset);
+        //System.out.println("Newset = "+newset);
         
         // Update Previous Selection Paths Hashset
         Iterator<String> iter = oldset.iterator();
@@ -404,18 +370,22 @@ public class LRgui extends javax.swing.JFrame {
             DropboxAPI.Entry entry = (DropboxAPI.Entry)(node.getUserObject());
             String pathval = entry.path;
             // Check pathname
-            if((paths.contains(pathval) && (!sel.contains(pathval)))){
+            if(del.contains(pathval)){
+                // Uncheck and delete local file
+                System.out.println("GOT THERE WITH "+node.toString());
+                node.setSelected(false);
+                dbapiobject.deleteLocalFile(entry);
+            }
+            
+            
+            else if((paths.contains(pathval) && (!sel.contains(pathval)))){
                 // Only set node as selected
                 node.setSelected(true);
             }else if(sel.contains(pathval)){
                 // Download and set as selected
                 dbapiobject.downloadFile(entry);
                 node.setSelected(true);
-            }else if(del.contains(pathval)){
-                // Uncheck and delete local file
-                node.setSelected(false);
-                dbapiobject.deleteLocalFile(entry);
-            } 
+            }
         }
         /*
         Iterator<DropboxAPI.Entry> it = sel.iterator();
