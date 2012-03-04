@@ -22,16 +22,16 @@ class DBNode extends DefaultMutableTreeNode {
      ********** CONSTRUCTORS ************
     */
     public DBNode() {
-        this(null);
-        // Should never go here
-        System.out.println("Tried constructing DBNode without Entry Data.");
+        // Should only go here when creating the root node
+        super(null,true);
     }
 
     public DBNode(Object dbEntry) {
-        super(dbEntry,((DropboxAPI.Entry)dbEntry).isDir);
+        super(dbEntry,!((DropboxAPI.Entry)dbEntry).isDir);
         
         DropboxAPI.Entry entry = (DropboxAPI.Entry)dbEntry;
         
+        /* NEED TO LOOK AT PUTTING THIS IN NEW ADD METHOD
         // Determine if parent is selected
         if(!((DropboxAPI.Entry)dbEntry).isDir){
             // Not a directory
@@ -43,6 +43,12 @@ class DBNode extends DefaultMutableTreeNode {
                 this.isSelected = false;
             }
         }
+        */
+    }
+    
+    public DBNode(Object dbEntry, boolean direct) {
+        super(dbEntry,direct);
+        DropboxAPI.Entry entry = (DropboxAPI.Entry)dbEntry;
     }
 
     /*
@@ -78,8 +84,14 @@ class DBNode extends DefaultMutableTreeNode {
     *   Overrides the DefaultMutableTreeNode toString method for use when
     *   displaying file structure
     */
+    @Override
     public String toString(){
-        return ((DropboxAPI.Entry)this.getUserObject()).fileName();
+        if((DropboxAPI.Entry)this.getUserObject() == null){
+            return "Need to Sync with DropBox Server";
+        }
+        else{
+            return ((DropboxAPI.Entry)this.getUserObject()).fileName();
+        }
     }
     // </editor-fold>
 }   // END CLASS DBnode

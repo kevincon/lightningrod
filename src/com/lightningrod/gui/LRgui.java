@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 //import javax.swing.tree.TreeSelectionModel;
 
@@ -27,8 +26,8 @@ public class LRgui extends javax.swing.JFrame {
     // Deletion Set
     static HashSet <DropboxAPI.Entry>s2 = new HashSet <DropboxAPI.Entry>();
     
-    static JTree filetree = new JTree((TreeNode)null);
-    
+    //static JTree filetree = new JTree((TreeNode)null);
+    static DBNode rootnode = new DBNode();
     
     /*
      * Class that carries out mouse actions
@@ -86,24 +85,34 @@ public class LRgui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        filetreedisplay = new javax.swing.JTree((TreeNode)null);
+        filedisplayPane = new javax.swing.JScrollPane();
+        filetreedisplay = new javax.swing.JTree(rootnode);
+        updateFiles = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jMenu1.setText("File");
+        filedisplayPane.setViewportView(filetreedisplay);
 
-        jMenuItem1.setText("Exit");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        updateFiles.setText("Update File List");
+        updateFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                updateFilesActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+
+        jMenu1.setText("File");
+
+        menuExit.setText("Exit");
+        menuExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuExitActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuExit);
 
         jMenuBar1.add(jMenu1);
 
@@ -117,31 +126,36 @@ public class LRgui extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(26, 26, 26)
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 443, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(159, Short.MAX_VALUE)
-                .add(filetreedisplay, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 439, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(101, 101, 101))
+                .addContainerGap()
+                .add(filedisplayPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 443, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(45, 45, 45)
+                .add(updateFiles)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(25, 25, 25)
-                .add(filetreedisplay, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 380, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 44, Short.MAX_VALUE)
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 63, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(38, 38, 38))
+            .add(layout.createSequentialGroup()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(layout.createSequentialGroup()
+                        .add(54, 54, 54)
+                        .add(filedisplayPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 381, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(layout.createSequentialGroup()
+                        .add(31, 31, 31)
+                        .add(updateFiles)))
+                .addContainerGap(376, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuExitActionPerformed
         // CHECK FOR FINISHING TRANSFERS BEFORE CLOSE
         System.exit(0);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_menuExitActionPerformed
+
+    private void updateFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateFilesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_updateFilesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,14 +189,34 @@ public class LRgui extends javax.swing.JFrame {
         //</editor-fold>
 
         // Set Variables
-        String[] strs = {"swing",     // 0
-         "platf",     // 1
-         "basic",     // 2
-         "metal",     // 3
-         "JTree"};    // 4
+        
+        // TEST TEST TEST
         
         
-        DBNode[] nodes = new DBNode[strs.length];
+        DropboxAPI.Entry entry1 = new DropboxAPI.Entry();
+        entry1.path = "test1";
+        com.lightningrod.gui.DBNode e1 = new com.lightningrod.gui.DBNode(entry1);
+        
+        DropboxAPI.Entry entry2 = new DropboxAPI.Entry();
+        entry2.path = "test2";
+        com.lightningrod.gui.DBNode e2 = new com.lightningrod.gui.DBNode(entry2);
+        
+        DropboxAPI.Entry entry3 = new DropboxAPI.Entry();
+        entry3.path = "test3";
+        com.lightningrod.gui.DBNode e3 = new com.lightningrod.gui.DBNode(entry3);
+        
+        DropboxAPI.Entry root = new DropboxAPI.Entry();
+        root.path = "testr";
+        com.lightningrod.gui.DBNode r = new com.lightningrod.gui.DBNode(root);
+        
+        rootnode.add(e1);
+        rootnode.add(e2);
+        rootnode.add(e3);
+        e1.add(r);
+        
+        // TEST TEST TEST END
+        
+        
         /*
         for (int i=0;i<strs.length;i++) {
             nodes[i] = new DBNode(strs[i]); 
@@ -212,11 +246,12 @@ public class LRgui extends javax.swing.JFrame {
         // </editor-fold>
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane filedisplayPane;
     private javax.swing.JTree filetreedisplay;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem menuExit;
+    private javax.swing.JButton updateFiles;
     // End of variables declaration//GEN-END:variables
 }
