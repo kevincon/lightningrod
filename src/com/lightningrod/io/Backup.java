@@ -20,11 +20,11 @@ public class Backup {
          */
         public static boolean backupFolder(String root_path, String newdir) {
             File f = new File(root_path);
-            boolean ret = f.renameTo(new File(root_path + newdir));
+            boolean ret = f.renameTo(new File(newdir));
             if (ret) {
-                System.out.println("Backup of Dropbox to " + newdir + "succeeded.");
+                System.out.println("Backup of Dropbox to " + newdir + " succeeded.");
             } else {
-                System.out.println("Backup of Dropbox to " + newdir + "failed.");
+                System.out.println("Backup of Dropbox to " + newdir + " failed.");
             }
             return ret;
         }
