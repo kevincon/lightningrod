@@ -55,22 +55,7 @@ class DBNode extends DefaultMutableTreeNode {
         if(this.isSelected()){
             // Set child as selected
             ((DBNode)newChild).setSelected(true);
-        }
-        
-        
-        /* Old Code
-        if(!((DropboxAPI.Entry)dbEntry).isDir){
-            // Not a directory
-            if(((DBNode)(this.getParent())).isSelected()){
-                    // Parent is selectd, also set this node as selected
-                    this.isSelected = true;
-            }else{
-                // Parent is not selected
-                this.isSelected = false;
-            }
-        }
-        */
-        
+        }      
     }
 
     /*

@@ -76,6 +76,7 @@ public class LRgui extends javax.swing.JFrame {
         
         public void expandChildren(DBNode n, TreePath orig){
             TreePath expandpath;
+            // Check if Directory
             if (n.children() != null) {
                 Enumeration e = n.children();
                 while (e.hasMoreElements()) {
@@ -86,7 +87,7 @@ public class LRgui extends javax.swing.JFrame {
                     }else{
                         mousetree.expandPath(expandpath);
                     }
-                    //mousetree.expandPath(expandpath);
+                    mousetree.expandPath(expandpath);
                 }
             }
                 
@@ -286,7 +287,15 @@ public class LRgui extends javax.swing.JFrame {
         
         DropboxAPI.Entry entry6 = new DropboxAPI.Entry();
         entry6.path = "best6";
-        com.lightningrod.gui.DBNode e6 = new com.lightningrod.gui.DBNode(entry6);
+        com.lightningrod.gui.DBNode e6 = new com.lightningrod.gui.DBNode(entry6,true);
+        
+        DropboxAPI.Entry entry7 = new DropboxAPI.Entry();
+        entry7.path = "best7";
+        com.lightningrod.gui.DBNode e7 = new com.lightningrod.gui.DBNode(entry7,true);
+        
+        DropboxAPI.Entry entry8 = new DropboxAPI.Entry();
+        entry8.path = "best8";
+        com.lightningrod.gui.DBNode e8 = new com.lightningrod.gui.DBNode(entry8);
         
         DropboxAPI.Entry root = new DropboxAPI.Entry();
         root.path = "testr";
@@ -302,6 +311,8 @@ public class LRgui extends javax.swing.JFrame {
         rootnode.add(e4);
         //rootnode.add(e1);
         e4.add(e5);
+        e6.add(e7);
+        e7.add(e8);
         
         // TEST TEST TEST END
         
