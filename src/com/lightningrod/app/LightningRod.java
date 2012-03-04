@@ -1,7 +1,9 @@
 package com.lightningrod.app;
 
 import com.lightningrod.dropbox.DBApi;
+import com.lightningrod.dropbox.DBSync;
 import com.lightningrod.io.Backup;
+import com.lightningrod.io.FileMonitorAdvanced;
 import java.io.File;
 
 /**
@@ -10,6 +12,7 @@ import java.io.File;
  */
 public class LightningRod {
         private static String root_drive;
+        private static String root_path;
         
         /**
 	 * @param args
@@ -20,7 +23,7 @@ public class LightningRod {
                 if (!(root_drive.equals("/")))
                     root_drive = root_drive + ":" + File.separator;
                 
-                String root_path = root_drive + DBApi.ROOT_FOLDER;
+                root_path = root_drive + DBApi.ROOT_FOLDER;
             
                 //backup Dropbox folder if it exists
                 if (new File(root_path).exists()) {
@@ -34,24 +37,33 @@ public class LightningRod {
                     //TODO Warn user that Dropbox folder was backed up.
                 }
                 
+                //create file monitoring object
+                FileMonitorAdvanced monitor = new FileMonitorAdvanced (3000L, 5000L,
+                new File(root_path));
+                
+                //create Dropbox sync monitoring object
+                DBSync sync = new DBSync(monitor, 3000L);
+                
                 //create db api object
-		DBApi db = new DBApi(root_drive);
-		
+		DBApi db = new DBApi(root_drive, monitor);
+                
 		//login
 		if (!db.login()) {
-			//login failed
-			return;
-		} else {	
-			//download entire Dropbox folder
-			db.treeDir(db.getRoot());
-                        
-                        //start file monitoring timer
-                        
-                        //start Dropbox sync timer
-                        
-                        while(true);
-		}
+                    //login failed
+                    return;
+		} else {
+                    //download entire Dropbox folder, add file monitors
+                    db.treeDir(db.getRoot());
 
-		db.logout();
+                    //start file monitoring timer
+                    monitor.addListener(monitor);
+                    monitor.startTimer();
+                    
+                    //start Dropbox sync timer
+                    sync.startTimer();
+                    while(true);
+                }
+
+		//db.logout();
 	}
 }
