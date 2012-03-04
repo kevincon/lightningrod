@@ -349,7 +349,7 @@ public class LRgui extends javax.swing.JFrame {
         boolean added;
         while (e.hasMoreElements()) {
             DBNode node = (DBNode) e.nextElement();
-            if (node.isSelected()) {
+            if (node.isSelected() && !node.isRoot()) {
                 newset.add(((DropboxAPI.Entry)(node.getUserObject())).path);
             }
         }
@@ -391,24 +391,21 @@ public class LRgui extends javax.swing.JFrame {
         e = rootnode.breadthFirstEnumeration();
         while (e.hasMoreElements()) {
             DBNode node = (DBNode) e.nextElement();
-            TreeNode[] nodes = node.getPath();
-            int size = nodes.length;
-            for(int i = 0;i<size;i++){
-                String pathval = ((((DropboxAPI.Entry)(((DBNode)nodes[i])).getUserObject())).path);
-                // Check pathname
-                if((paths.contains(pathval) && (!sel.contains(pathval)))){
-                    // Only set node as selected
-                    ((DBNode)nodes[i]).setSelected(true);
-                }else if(sel.contains(pathval)){
-                    // Download and set as selected
-                    dbapiobject.downloadFile((DropboxAPI.Entry)(((DBNode)nodes[i]).getUserObject()));
-                    ((DBNode)nodes[i]).setSelected(true);
-                }else if(del.contains(pathval)){
-                    // Uncheck and delete local file
-                    ((DBNode)nodes[i]).setSelected(false);
-                    dbapiobject.deleteLocalFile((DropboxAPI.Entry)(((DBNode)nodes[i]).getUserObject()));
-                }
-            }   
+            DropboxAPI.Entry entry = (DropboxAPI.Entry)(node.getUserObject());
+            String pathval = entry.path;
+            // Check pathname
+            if((paths.contains(pathval) && (!sel.contains(pathval)))){
+                // Only set node as selected
+                node.setSelected(true);
+            }else if(sel.contains(pathval)){
+                // Download and set as selected
+                dbapiobject.downloadFile(entry);
+                node.setSelected(true);
+            }else if(del.contains(pathval)){
+                // Uncheck and delete local file
+                node.setSelected(false);
+                dbapiobject.deleteLocalFile(entry);
+            } 
         }
         /*
         Iterator<DropboxAPI.Entry> it = sel.iterator();
