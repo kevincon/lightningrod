@@ -16,9 +16,9 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
     private long fileCreationPollingInterval_;
     private final File localDropboxRootDirectory_;
     private Timer timer_;
-    protected Set<File> filesAdded;
-    protected Set<Entry> filesRemoved;
-    protected Set<SimpleEntry<Entry, File> > filesUpdated;
+    public Set<File> filesAdded;
+    public Set<Entry> filesRemoved;
+    public Set<SimpleEntry<Entry, File> > filesUpdated;
     
     // fileChangePollingInterval = milliseconds interval between examining
     //   known list of files for changes.
@@ -35,9 +35,10 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
         fileCreationPollingInterval_ = fileCreationPollingInterval;
         
         filesToMonitor_ = new HashMap<File, Entry>();
-        filesAdded = new LinkedHashSet<File>();
-        filesRemoved = new LinkedHashSet<Entry>();
-        filesUpdated = new LinkedHashSet<SimpleEntry<Entry, File> >();
+        filesAdded = Collections.synchronizedSet(new LinkedHashSet<File>());
+        filesRemoved = Collections.synchronizedSet(new LinkedHashSet<Entry>());
+        filesUpdated = Collections.synchronizedSet(
+                new LinkedHashSet<SimpleEntry<Entry, File> >());
     }
     
     @Override
