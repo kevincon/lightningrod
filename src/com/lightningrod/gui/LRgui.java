@@ -101,7 +101,13 @@ public class LRgui extends javax.swing.JFrame {
     public LRgui() {
         initComponents();
         
-        // * NEW CODE */
+        /******* NEW CODE ********/
+        
+        // Set Root Node as invisible
+        filetreedisplay.setRootVisible(false);
+        // Set Root Node as Selected
+        rootnode.setSelected(true);
+        
         filetreedisplay.setCellRenderer(new RenderChecks());
         
         filetreedisplay.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
