@@ -62,6 +62,12 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
      * @param file Local file to monitor for changes and deletion.
      */
     public void addFile (File file, Entry entry) {
+        if (file.isHidden()) {
+            System.out.println("NOT adding monitoring for hidden file: "
+                               + file);
+            return;
+        }
+        
         System.out.println("Adding monitoring for file: " + file);
         filesToMonitor_.put(file, entry);
         super.addFile(file);
@@ -91,7 +97,9 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
             
             File[] files = root.listFiles();
             for (File f : files) {
-                newFiles.add(f);
+                if (!f.isHidden()) {
+                    newFiles.add(f);
+                }
                 if (!f.isFile()) {
                     Set<File> subFiles = getAllFiles(f);
                     newFiles.addAll(subFiles);
