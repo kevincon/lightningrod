@@ -344,7 +344,27 @@ public class LRgui extends javax.swing.JFrame {
         }
         
         // Update DBApi Hashset
-        dbapiobject.pathnames = paths;
+        paths.addAll(dbapiobject.pathnames);
+        // Clear DBApi Paths HashSet
+        dbapiobject.pathnames.clear();
+        
+        // Update Tree and Add Selections
+        rootnode = dbapiobject.treeDir(dbapiobject.getRoot());
+        
+        // Iterate through tree and check if pathname is in Hashset
+        e = rootnode.breadthFirstEnumeration();
+        while (e.hasMoreElements()) {
+            DBNode node = (DBNode) e.nextElement();
+            TreeNode[] nodes = node.getPath();
+            int size = nodes.length;
+            for(int i = 0;i<size;i++){
+                // Check pathname
+                if(paths.contains((((DropboxAPI.Entry)(((DBNode)nodes[i])).getUserObject())).path)){
+                    // Set node as selected
+                    ((DBNode)nodes[i]).setSelected(true);
+                }
+            }   
+        }
     }//GEN-LAST:event_updateFilesActionPerformed
 
     private void selectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllActionPerformed
