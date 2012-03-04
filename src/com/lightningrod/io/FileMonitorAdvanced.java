@@ -8,16 +8,16 @@ import com.dropbox.client2.DropboxAPI;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.*;
 
 // http://geosoft.no/software/filemonitor/FileMonitor.java.html
 
 public class FileMonitorAdvanced extends FileMonitor implements FileListener {
     BiMap<File, DropboxAPI.Entry> filesToMonitor_;
-    private final long fileCreationPollingInterval_;
     private final File localDropboxRootDirectory_;
     private Timer timer_;
+    private Set<File> filesAdded_;
+    private Set<DropboxAPI.Entry> filesRemoved_;
     
     // fileChangePollingInterval = milliseconds interval between examining
     //   known list of files for changes.
@@ -30,10 +30,12 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
                                long fileCreationPollingInterval,
                                File localDropboxRootDirectory) {
         super(fileChangePollingInterval);
-        fileCreationPollingInterval_ = fileCreationPollingInterval;
         localDropboxRootDirectory_ = localDropboxRootDirectory;
         
         filesToMonitor_ = HashBiMap.create();
+        
+        filesAdded_ = new LinkedHashSet<File>();
+        filesRemoved_ = new LinkedHashSet<DropboxAPI.Entry>();
         
         timer_ = new Timer(true);
         timer_.schedule(new FileCreationNotifier(), 0,
@@ -68,7 +70,22 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
      * and notify listeners if changed.
      */
     private class FileCreationNotifier extends TimerTask {
-
+        // Note that this *will* follow symbolic links. Good luck.
+        private Set<File> getAllFiles(File root) {
+            Set<File> newFiles = new LinkedHashSet();
+            
+            File[] files = root.listFiles();
+            for (File f : files) {
+                newFiles.add(f);
+                if (!f.isFile()) {
+                    Set<File> subFiles = getAllFiles(f);
+                    newFiles.addAll(subFiles);
+                }
+            }
+            
+            return newFiles;
+        }
+        
         @Override
         public void run() {
             // Create a set of all files starting with 
@@ -76,13 +93,10 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
             // files being monitored. Any files that are new to the set have
             // been added. Notify the appropriate authorities.
             Set<File> filesBeingMonitored = new HashSet(filesToMonitor_.keySet());
-            Set<File> filesThatExist = new HashSet(filesBeingMonitored.size());
-            
-            // TODO(ebensh): Recursively add existing files to filesThatExist.
+            Set<File> filesThatExist = getAllFiles(localDropboxRootDirectory_);
             filesThatExist.removeAll(filesBeingMonitored);
             
-            // TODO(ebensh): Add filesThatExist to a *unique* queue of files
-            // to be added to Dropbox for Kevin to consume.
+            filesAdded_.addAll(filesThatExist);
         }
     }
     
@@ -103,6 +117,9 @@ public class FileMonitorAdvanced extends FileMonitor implements FileListener {
         boolean isDeleted = !file.exists();        
         if(isDeleted) {
             System.out.println("File deleted: " + file.getAbsolutePath());
+            
+            filesAdded_.remove(file);
+            filesRemoved_.add(entry);
             if (hasDropboxEntry) {
                 System.out.println("=> Corresponding Dropbox path: " + entry.path);
             }
