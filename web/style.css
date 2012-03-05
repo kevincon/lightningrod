@@ -138,3 +138,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#784421', end
 	color:white;
 	font-size:1.5em;
 }
+
+#success-div{
+		width: 50%;
+		margin-left: 25%;
+		margin-right: 25%;
+        padding-top:10px;
+		}
