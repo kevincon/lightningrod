@@ -8,19 +8,15 @@ import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.WebAuthSession;
 import com.dropbox.client2.session.WebAuthSession.WebAuthInfo;
 import com.lightningrod.app.BareBonesBrowserLaunch;
-import com.lightningrod.io.FileMonitorAdvanced;
 import com.lightningrod.gui.DBNode;
 import com.lightningrod.gui.LRgui;
+import com.lightningrod.io.FileMonitorAdvanced;
 import java.io.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Convenience class for Dropbox methods.
@@ -32,7 +28,8 @@ public class DBApi {
 	
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
-        final static public String ROOT_FOLDER = "Users/bill/Downloads/testdb";
+        //final static public String ROOT_FOLDER = "Users/bill/Downloads/testdb";
+        final static public String ROOT_FOLDER = "home/monk/testdb";
         
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
@@ -261,6 +258,11 @@ public class DBApi {
                 return false;
             
             monitor.setTimerNoop();
+            if (!f.exists()) {
+                monitor.clearTimerNoop();
+                return false;
+            }
+            
             boolean result = false;
             try {
                 InputStream in = new FileInputStream(f);
@@ -302,7 +304,7 @@ public class DBApi {
             monitor.setTimerNoop();
             File f = new File(getLocalPath(node.path));
             this.monitor.removeFile(f);
-            boolean ret = f.delete();
+            boolean ret = FileUtils.deleteQuietly(f);
             monitor.clearTimerNoop();
             return ret;
         }
