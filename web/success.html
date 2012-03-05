@@ -1,6 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="en">
   <head>
+  <SCRIPT LANGUAGE="JavaScript">
+
+<!-- This script and many more are available free online at -->
+<!-- The JavaScript Source!! http://javascript.internet.com -->
+
+<!-- Begin
+function popupPage() {
+var page = "popup.html";
+windowprops = "height=500,width=500,location=no,"
++ "scrollbars=no,menubars=no,toolbars=no,resizable=yes";
+
+window.open(page, "Popup", windowprops);
+}
+//  End -->
+</script>
     <meta content="text/html; charset=ISO-8859-1"
       http-equiv="Content-Type">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +30,7 @@
   <script type="text/javascript" src="jquery.js"></script>
     <!-- /CSS Styles Folio -->
   </head>
-  <body>
+  <body onLoad="setTimeout(window.close, 5000)">
   <!--LOL-->
     <div id="entirebody">
     <div id="logo" style="padding: 30px;"> <!-- where the logo will go-->
@@ -43,15 +58,6 @@
 		<p><h2 style="color:white;">Thank you for using Lightning Rod!</h2></p>
 		<p><h3 style="color:white;">This window will close in 5 seconds and return you to the Lightning Rod application.</h3></p>
 	</center>
-	<script type="text/javascript">
-		function closeWindow() {
-			setTimeout(function() {
-			window.close();
-			}, 5000);
-		}
-
-		window.onload = closeWindow();
-	</script>
     </div>
 
 	</div>
