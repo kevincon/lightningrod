@@ -1,0 +1,146 @@
+* {
+margin: 0;
+padding: 0;
+}
+
+body {
+  background-color:#3A2110;
+}
+
+body p {
+	font-size:1.1em;
+}
+
+body p a {
+  color:yellow;
+}
+
+#clouds {
+  padding-top:5px;
+  background-color:#666666;
+}
+
+#logo h1 {
+	color: white;
+	font-family: 'Electrolize', sans-serif;
+	font-size:4em;       
+	text-align:center;
+}
+
+#navigation{
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 18px;
+  background-color:#666666;
+}
+
+#navigation ul {
+  padding-top:10px;
+  text-align:center;
+  padding-bottom:5px;
+}
+
+#navigation li {
+  display:inline;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#navigation a{
+  text-decoration:none;
+  color: white;
+}
+
+#navigation a:hover{
+  color:yellow;
+  text-decoration: none;
+}
+
+#sky {
+  background-image: url('../images/cloud_pattern.png');
+  background-position:center;
+  overflow: hidden;
+}
+
+#city {
+  background-color:#0044aa;
+  overflow:hidden;
+}
+
+#content {
+  padding-top:10px;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+#content a{
+  color:yellow;
+  text-decoration: none;
+}
+
+#dirt {
+  background-color:#784421;
+  overflow:hidden;
+}
+
+#container {
+	width: 100%;
+	color: white;
+	background: rgb(120,68,33); /* Old browsers */
+  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzc4NDQyMSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjU0JSIgc3RvcC1jb2xvcj0iIzNhMjExMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+  background: -moz-linear-gradient(top, rgba(120,68,33,1) 0%, rgba(58,33,16,1) 54%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(120,68,33,1)), color-stop(54%,rgba(58,33,16,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(120,68,33,1) 0%,rgba(58,33,16,1) 54%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(120,68,33,1) 0%,rgba(58,33,16,1) 54%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(120,68,33,1) 0%,rgba(58,33,16,1) 54%); /* IE10+ */
+  background: linear-gradient(top, rgba(120,68,33,1) 0%,rgba(58,33,16,1) 54%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#784421',      endColorstr='#3a2110',GradientType=0 ); /* IE6-8 */
+}
+
+.tagline {
+  text-align:center;
+  font-size:1.3em;
+}
+
+.download {
+  text-align:center;
+  font-size:1.8em;
+}
+
+#content {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+#content p {
+  padding-top:5px;
+  padding-bottom:5px;
+}
+
+#content b {
+	font-size:1.4em;
+}
+
+#content b a {
+  color:white;
+}
+
+#content h3 {
+  margin-top:10px;
+  margin-bottom:10px;
+	font-size:1.5em;
+}
+
+footer {
+  background-color:#3A2110;
+  text-align: center;
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 18px;
+  font-size:14px;
+  padding-top: 30px;
+  padding-bottom:20px;
+  text-decoration: none;
+}
