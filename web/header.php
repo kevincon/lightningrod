@@ -33,7 +33,7 @@
         <li><a href="index.php">Home</a></li>
         <li><a href="about.php">About</a></li>
         <li><a href="faq.php">FAQ</a></li>
-        <!-- <li><a href="http://lightningroddev.tumblr.com">Blog</a></li> -->
+        <li><a href="http://lightningroddev.tumblr.com">Blog</a></li>
       </ul>
       </div> <!-- navigation -->
     </div> <!-- clouds -->
