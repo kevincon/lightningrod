@@ -23,27 +23,27 @@ import org.apache.commons.io.FileUtils;
  * @author Kevin Conley
  */
 public class DBApi {
-	final static private String APP_KEY = "icbm0h0d2th6cm5";
-	final static private String APP_SECRET = "7x7g643tj17wm7w";
-	
+	final static private String APP_KEY = "FILLMEIN";
+	final static private String APP_SECRET = "FILLMEIN";
+
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
-	
+
         //final static public String ROOT_FOLDER = "Users/bill/Downloads/testdb";
         final static public String ROOT_FOLDER = "home/monk/testdb";
-        
+
 	private DropboxAPI<WebAuthSession> mDBApi;
 	private WebAuthSession session;
 	private AppKeyPair appKeys;
 	private WebAuthInfo auth;
-	
+
 	private Entry root;
         private String root_drive;
         private FileMonitorAdvanced monitor;
-        
+
         public HashSet <String>pathnames;
-	
+
         /**
-         * 
+         *
          */
         public DBApi(String rd, FileMonitorAdvanced monitor) {
 		//create dropbox api and session objects based on app key/secret
@@ -54,7 +54,7 @@ public class DBApi {
                 this.root_drive = rd;
                 this.monitor = monitor;
 	}
-	
+
         /**
          * Login user to Dropbox.
          * @return True if successful, false otherwise.
@@ -63,22 +63,22 @@ public class DBApi {
 		if (!this.authorize()) {
 			return false;
 		} else {
-			//TODO stop here so user can confirm app approval 
+			//TODO stop here so user can confirm app approval
 			/*
-                        Scanner readUserInput=new Scanner(System.in); 
+                        Scanner readUserInput=new Scanner(System.in);
 			System.out.println("Press enter after "
                                 + "approving Lightning Rod.");
-			readUserInput.nextLine(); 
+			readUserInput.nextLine();
 			*/
-                    
+
                     LRgui.display_dialog("Please Approve LightningRod");
-                    
-                    
-                    
+
+
+
 			return authenticate();
 		}
 	}
-	
+
 	private boolean authorize() {
 		try {
 			//construct app authorization URL
@@ -86,16 +86,16 @@ public class DBApi {
 			System.out.println("url: " + this.auth.url);
 			//launch browser for user to approve app
 			BareBonesBrowserLaunch.openURL(this.auth.url);
-			
+
 			return true;
 		} catch (DropboxException ex) {
 			// TODO Auto-generated catch block
 			Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
 		}
-		
+
 	}
-	
+
 	private boolean authenticate() {
 		try {
 			session.retrieveWebAccessToken(auth.requestTokenPair);
@@ -104,9 +104,9 @@ public class DBApi {
 			// TODO Auto-generated catch block
                         Logger.getLogger(DBApi.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
-		}	
+		}
 	}
-	
+
         /**
          * Construct the tree, using pre-order recursive traversal.
          * @param node The Entry node used to start the traversal.
@@ -119,7 +119,7 @@ public class DBApi {
 			node = updateTree(node);
 		System.out.println(node.fileName());
                 //
-                DBNode n = new DBNode(node); 
+                DBNode n = new DBNode(node);
                 //File ret = downloadFile(node);
                 //if (ret != null) {
                     //this.monitor.addFile(ret, node);
@@ -133,7 +133,7 @@ public class DBApi {
 		}
                 return n;
 	}
-	
+
         //
         /**
          * Update tree from node's perspective (just one level of children).
@@ -155,7 +155,7 @@ public class DBApi {
 			return null;
 		}
 	}
-	
+
         /**
          * Update and return the root Entry node.
          * @return The updated root Entry node.
@@ -163,14 +163,14 @@ public class DBApi {
         public Entry getRoot() {
             return (this.root = updateTree(root));
 	}
-        
+
         // Returns the Dropbox free space in Megabytes, or -1 if it was not
         // retrievable.
         public int getDropboxFreeSpace() {
             int percentInUse = 0;
             try {
                 percentInUse = (int) ((mDBApi.accountInfo().quotaNormal +
-                                    mDBApi.accountInfo().quotaShared) / 
+                                    mDBApi.accountInfo().quotaShared) /
                                    ((double)mDBApi.accountInfo().quota) * 100.0);
             } catch (DropboxException e) {
                 System.out.println("Unable to retrieve Dropbox free space. "
@@ -178,7 +178,7 @@ public class DBApi {
             }
             return percentInUse;
         }
-        
+
         // Returns the root drive free space in Megabytes, or -1 if it was not
         // retrievable.
         public int getRootFreeSpace() {
@@ -203,7 +203,7 @@ public class DBApi {
          * @return The Dropbox Entry node for the new file, or null otherwise.
          */
         public Entry addFile(File f) {
-            if (f == null) 
+            if (f == null)
                 return null;
             monitor.setTimerNoop();
             String strip = root_drive + ROOT_FOLDER;
@@ -223,7 +223,7 @@ public class DBApi {
                     monitor.clearTimerNoop();
                     return ret;
                 }
-                
+
             } else {
                 Entry ret = null;
                 try {
@@ -241,7 +241,7 @@ public class DBApi {
                 }
             }
         }
-    
+
         /**
          * Update file on Dropbox based on local modification.
          * @param se Key/value pair for Dropbox Entry and File object to modify.
@@ -250,19 +250,19 @@ public class DBApi {
         public boolean updateFile(SimpleEntry<Entry, File> se) {
             Entry e = se.getKey();
             File f = se.getValue();
-            
+
             if (e == null || f == null)
                 return false;
-            
+
             if (f.isDirectory())
                 return false;
-            
+
             monitor.setTimerNoop();
             if (!f.exists()) {
                 monitor.clearTimerNoop();
                 return false;
             }
-            
+
             boolean result = false;
             try {
                 InputStream in = new FileInputStream(f);
@@ -279,7 +279,7 @@ public class DBApi {
                 return result;
             }
         }
-            
+
         /**
          * Delete file from Dropbox's server.
          * @param node The Dropbox Entry node to delete from their server.
@@ -294,7 +294,7 @@ public class DBApi {
                 return false;
             }
         }
-        
+
         /**
          * Delete file from local file system.
          * @param node The Dropbox Entry node to delete from file system.
@@ -356,14 +356,14 @@ public class DBApi {
         public String getLocalPath(String path) {
             return root_drive + ROOT_FOLDER + File.separator + path;
         }
-        
+
         /**
          * Logout user from session.
          */
         public void logout() {
 		session.unlink();
 	}
-        
-        
-	
+
+
+
 }
